@@ -1,8 +1,3 @@
-/*
- *	colorpicker.main.js
- *	mnichangxin 2016/11/16 weixin:lichangxin678
- */
-
 import {defaults} from './colorpicker.wheel.js';
 import {screen} from './colorpicker.screen.js';
 
