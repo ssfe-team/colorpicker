@@ -1,14 +1,16 @@
 var gulp = require('gulp'),
 	babel = require('gulp-babel'),
 	uglify = require('gulp-uglify'),
+	concat = require('gulp-concat'),
 	rename = require('gulp-rename');
 
-//compile
+//compile and package
 gulp.task('compile', function() {
 	gulp.src('src/*.js')
 		.pipe(babel({
 			presets: ['es2015']
 		}))
+		.pipe(concat('colorpicker.js'))
 		.pipe(gulp.dest('dist'));
 });
 
