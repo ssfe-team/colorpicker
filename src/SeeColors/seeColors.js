@@ -23,12 +23,7 @@ class SeeColors{
             this.findRom(ele.childNodes[i],copy.childNodes[i]);
         }
     }
-    setStyle(ele,copy){
-        // try{
-        //     copy.style[style]=this.getStyle(ele)[style];
-        // }catch (e){
-        //     // console.log(e);
-        // }
+    setStyle(ele,copy,c){
         for(let i=0; i<ele.children.length;i++){
             for(let style in this.getStyle(ele.children[i])){
                 try{
@@ -46,24 +41,41 @@ class SeeColors{
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
         this.option=option || {auto:"auto"};
+        this.controller();
+    }
+    controller(option){
         if(this.option.auto=="auto"){
             let dom=this.renderDom().outerHTML;
             this.createImage(dom).then(function (img) {
-                this.$("body").appendChild(img);
+                // this.$("body").appendChild(img);
                 let can=this.createCanvasContainer(img);
                 this.$("body").appendChild(can.canvas);
                 console.log(can.imgData);
+                this.addListener(can.canvas,(x,y)=>{
+                    let canvas=can.canvas,
+                        width=canvas.width,
+                        height=canvas.height,
+                        top=canvas.offsetTop-this.$("body").scrollTop,
+                        left=canvas.offsetLeft-this.$("body").scrollLeft,
+                        mX=x-left,
+                        mY=y-top,
+                        pixel=mY*width+mX;
+                    console.log(mX+"  "+mY+
+                        "rgba("+
+                        can.imgData[(pixel-1)*4]+","+
+                        can.imgData[(pixel-1)*4+1]+","+
+                        can.imgData[(pixel-1)*4+2]+","+
+                        can.imgData[(pixel-1)*4+3]/255+")");
+                });
             }.bind(this));
-        }
-    }
-    controller(option){
 
+        }
     }
     addListener(container,fn){
         container.addEventListener("mousemove",()=>{
             let mouseLocation=this.getMouseLocation();
             fn(mouseLocation.mouseX,mouseLocation.mouseY);
-        },false)
+        },false);
     }
     renderDom(){
         let dom=this.dom;
@@ -71,8 +83,15 @@ class SeeColors{
         copy.classList.add("seeColors-copy-dom");
         copy.appendChild(dom.cloneNode());
         this.findRom(dom,copy.children[0]);
+        for(let style in this.getStyle(dom)){
+            try{
+                copy.style[style]=this.getStyle(dom)[style];
+            }catch (e){
+                // console.log(e);
+            }
+        }
         this.setStyle(dom,copy.children[0]);
-        console.log(copy);
+        // console.log(copy);
         return copy;
     }
     createImage(str){
@@ -80,12 +99,12 @@ class SeeColors{
         let height=this.dom.offsetHeight,
             width=this.dom.offsetWidth,
             data= `
-            <svg xmlns='http://www.w3.org/2000/svg' width='`+width+`' height='`+height+`'>
+            <svg xmlns='http://www.w3.org/2000/svg' width='`+width+`' height='`+height+`' >
                 <switch>
-                    <foreignObject width='100%' height='100%'>
-                        <body xmlns='http://www.w3.org/1999/xhtml'>
+                    <foreignObject width='100%' height='100%' >
+                        <div xmlns='http://www.w3.org/1999/xhtml' >
                             ` + str+ `
-                        </body>
+                        </div>
                     </foreignObject>
                 </switch>
             </svg>`;
