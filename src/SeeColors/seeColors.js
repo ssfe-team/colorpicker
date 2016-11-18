@@ -69,6 +69,7 @@ class SeeColors{
                 return it;
             }).catch(()=>{
                 console.log("渲染失败!");
+                return null;
             });
         }
     }
@@ -246,3 +247,5 @@ class SeeColors{
         this.$(".seeColors-temp-container").remove();
     }
 }
+
+// export {SeeColors};
