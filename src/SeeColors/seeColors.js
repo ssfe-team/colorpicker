@@ -23,15 +23,15 @@ class SeeColors{
                 this.createSeeColorContainer(can.canvas);
                 let canvas=can.canvas,
                     width=canvas.width,
-                    height=canvas.height,
-                    top=canvas.offsetTop-this.$("body").scrollTop,
-                    left=canvas.offsetLeft-this.$("body").scrollLeft;
+                    height=canvas.height;
                 // console.log(can.imgData);
                 return this.addListener(can.canvas,(x,y)=>{
                     if(this.$('.seeColors-follow-cooky').length==0){
                         this.createFollowCookies();
                     }
-                    let mX=x-left,
+                    let top=canvas.offsetTop-this.$("body").scrollTop,
+                        left=canvas.offsetLeft-this.$("body").scrollLeft,
+                        mX=x-left,
                         mY=y-top,
                         pixel=mY*width+mX;
                     this.setFollowCookies(mX,mY,"rgba("+
@@ -46,7 +46,9 @@ class SeeColors{
                         can.imgData[(pixel-1)*4+2]+","+
                         can.imgData[(pixel-1)*4+3]/255+")");
                 },(x,y)=>{
-                    let mX=x-left,
+                    let top=canvas.offsetTop-this.$("body").scrollTop,
+                        left=canvas.offsetLeft-this.$("body").scrollLeft,
+                        mX=x-left,
                         mY=y-top,
                         pixel=mY*width+mX;
                     return{
