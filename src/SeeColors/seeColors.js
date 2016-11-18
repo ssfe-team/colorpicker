@@ -135,12 +135,13 @@ class SeeColors{
         this.findRom(dom,copy.children[0]);
         for(let style in this.getStyle(dom)){
             try{
-                copy.style[style]=this.getStyle(dom)[style];
+                copy.children[0].style[style]=this.getStyle(dom)[style];
             }catch (e){
                 // console.log(e);
             }
         }
         this.setStyle(dom,copy.children[0]);
+        console.log(copy);
         return copy;
     }
     createImage(str){
@@ -192,21 +193,22 @@ class SeeColors{
     }
     createSeeColorContainer(canvas){
         let dom=this.dom,
+            domStyle=this.getStyle(dom),
             top=dom.offsetTop,
             left=dom.offsetLeft,
             container=document.createElement("div"),
-            style=this.getStyle(this.$('body'));
+            bodyStyle=this.getStyle(this.$('body'));
         container.classList.add('seeColors-temp-container');
-        container.style.width=style.width.split("px")[0]
-            -(-style.paddingLeft.split("px")[0]
-            -style.marginLeft.split("px")[0]
-            -style.paddingRight.split("px")[0]
-            -style.marginRight.split("px")[0])+"px";
-        container.style.height=style.height.split("px")[0]
-            -(-style.paddingTop.split("px")[0]
-            -style.marginTop.split("px")[0]
-            -style.paddingTop.split("px")[0]
-            -style.marginTop.split("px")[0])+"px";
+        container.style.width=bodyStyle.width.split("px")[0]
+            -(-bodyStyle.paddingLeft.split("px")[0]
+            -bodyStyle.marginLeft.split("px")[0]
+            -bodyStyle.paddingRight.split("px")[0]
+            -bodyStyle.marginRight.split("px")[0])+"px";
+        container.style.height=bodyStyle.height.split("px")[0]
+            -(-bodyStyle.paddingTop.split("px")[0]
+            -bodyStyle.marginTop.split("px")[0]
+            -bodyStyle.paddingTop.split("px")[0]
+            -bodyStyle.marginTop.split("px")[0])+"px";
         container.style.position="absolute";
         container.style.top="0";
         container.style.left="0";
@@ -214,8 +216,10 @@ class SeeColors{
         container.style.backgroundColor="rgba(255,255,255,.6)";
         container.appendChild(canvas);
         canvas.style.position="absolute";
-        canvas.style.top=top+"px";
-        canvas.style.left=left+"px";
+        canvas.style.top=top-(-domStyle.paddingTop.split("px")[0]
+            -domStyle.marginTop.split("px")[0])+"px";
+        canvas.style.left=left-(-domStyle.paddingLeft.split("px")[0]
+            -domStyle.marginLeft.split("px")[0])+"px";
         canvas.style.zIndex="1000";
         this.$("body").appendChild(container);
     }
@@ -233,8 +237,8 @@ class SeeColors{
         this.$('.seeColors-follow-cooky').remove();
     }
     setFollowCookies(l,t,c,w,h){
-        let left=(w-l>100)?l+50:l-30,
-            top=t>50?(h-t>60?t:t-30):t+50;
+        let left=(w-l>80)?l+40:l-60,
+            top=t>50?(h-t>60?t:t-40):t+30;
         this.$('.seeColors-follow-cooky').style.zIndex="1001";
         this.$('.seeColors-follow-cooky').style.top=top+"px";
         this.$('.seeColors-follow-cooky').style.left=left+"px";
