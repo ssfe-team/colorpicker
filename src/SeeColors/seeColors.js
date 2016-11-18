@@ -7,43 +7,68 @@ class SeeColors{
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
         this.option=option || {auto:"auto"};
-        this.controller();
+        return new Promise((resolve,reject)=>{
+            this.controller().then((it)=>{
+                this.exit();
+                resolve(it);
+            });
+        });
     }
     controller(option){
         if(this.option.auto=="auto"){
             let dom=this.renderDom().outerHTML;
-            this.createImage(dom).then(function (img) {
+            return this.createImage(dom).then(function (img) {
                 // this.$("body").appendChild(img);
                 let can=this.createCanvasContainer(img);
-                // this.$("body").appendChild(can.canvas);
                 this.createSeeColorContainer(can.canvas);
+                let canvas=can.canvas,
+                    width=canvas.width,
+                    height=canvas.height,
+                    top=canvas.offsetTop-this.$("body").scrollTop,
+                    left=canvas.offsetLeft-this.$("body").scrollLeft;
                 // console.log(can.imgData);
-                this.addListener(can.canvas,(x,y)=>{
+                return this.addListener(can.canvas,(x,y)=>{
                     if(this.$('.seeColors-follow-cooky').length==0){
                         this.createFollowCookies();
                     }
-                    let canvas=can.canvas,
-                        width=canvas.width,
-                        height=canvas.height,
-                        top=canvas.offsetTop-this.$("body").scrollTop,
-                        left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=x-left,
+                    let mX=x-left,
                         mY=y-top,
                         pixel=mY*width+mX;
-                    this.setFollowCookies(mX+50,mY,"rgba("+
+                    this.setFollowCookies(mX,mY,"rgba("+
                         can.imgData[(pixel-1)*4]+","+
                         can.imgData[(pixel-1)*4+1]+","+
                         can.imgData[(pixel-1)*4+2]+","+
-                        can.imgData[(pixel-1)*4+3]/255+")");
+                        can.imgData[(pixel-1)*4+3]/255+")",width,height);
                     console.log(mX+"  "+mY+
                         "rgba("+
                         can.imgData[(pixel-1)*4]+","+
                         can.imgData[(pixel-1)*4+1]+","+
                         can.imgData[(pixel-1)*4+2]+","+
                         can.imgData[(pixel-1)*4+3]/255+")");
+                },(x,y)=>{
+                    let mX=x-left,
+                        mY=y-top,
+                        pixel=mY*width+mX;
+                    return{
+                        pixelX:mX,
+                        pixelY:mY,
+                        colorString:"rgba("+
+                        can.imgData[(pixel-1)*4]+","+
+                        can.imgData[(pixel-1)*4+1]+","+
+                        can.imgData[(pixel-1)*4+2]+","+
+                        can.imgData[(pixel-1)*4+3]/255+")",
+                        color:[can.imgData[(pixel-1)*4],
+                            can.imgData[(pixel-1)*4+1],
+                            can.imgData[(pixel-1)*4+2],
+                            can.imgData[(pixel-1)*4+3]/255]
+                    }
+                }).then((it)=>{
+                    return it;
                 });
-            }.bind(this)).catch((e)=>{
-                console.log(e);
+            }.bind(this)).then((it)=>{
+                return it;
+            }).catch(()=>{
+                console.log("渲染失败!");
             });
         }
     }
@@ -81,7 +106,7 @@ class SeeColors{
     getStyle(ele){
         return window.getComputedStyle? window.getComputedStyle(ele, null):ele.currentStyle;
     }
-    addListener(container,fn){
+    addListener(container,fn,fin){
         container.addEventListener("mousemove",()=>{
             let mouseLocation=this.getMouseLocation();
             fn(mouseLocation.mouseX,mouseLocation.mouseY);
@@ -94,6 +119,12 @@ class SeeColors{
         container.addEventListener("mouseout",()=>{
             this.removeFollowCookies();
         },false);
+        return new Promise((resolve,reject)=>{
+            container.addEventListener("click",()=>{
+                let mouseLocation=this.getMouseLocation();
+                resolve(fin(mouseLocation.mouseX,mouseLocation.mouseY));
+            },false);
+        });
     }
     renderDom(){
         let dom=this.dom;
@@ -109,7 +140,6 @@ class SeeColors{
             }
         }
         this.setStyle(dom,copy.children[0]);
-        console.log(copy);
         return copy;
     }
     createImage(str){
@@ -165,6 +195,7 @@ class SeeColors{
             left=dom.offsetLeft,
             container=document.createElement("div"),
             style=this.getStyle(this.$('body'));
+        container.classList.add('seeColors-temp-container');
         container.style.width=style.width.split("px")[0]
             -(-style.paddingLeft.split("px")[0]
             -style.marginLeft.split("px")[0]
@@ -200,11 +231,18 @@ class SeeColors{
     removeFollowCookies(){
         this.$('.seeColors-follow-cooky').remove();
     }
-    setFollowCookies(l,t,c){
-
+    setFollowCookies(l,t,c,w,h){
+        let left=(w-l>100)?l+50:l-30,
+            top=t>50?(h-t>60?t:t-30):t+50;
         this.$('.seeColors-follow-cooky').style.zIndex="1001";
-        this.$('.seeColors-follow-cooky').style.top=t+"px";
-        this.$('.seeColors-follow-cooky').style.left=l+"px";
+        this.$('.seeColors-follow-cooky').style.top=top+"px";
+        this.$('.seeColors-follow-cooky').style.left=left+"px";
         this.$('.seeColors-follow-cooky').style.backgroundColor=c;
+    }
+    exit(){
+        if(this.$(".seeColors-follow-cooky").length!=0)
+            this.$(".seeColors-follow-cooky").remove();
+        this.$(".seeColors-temp-canvas").remove();
+        this.$(".seeColors-temp-container").remove();
     }
 }

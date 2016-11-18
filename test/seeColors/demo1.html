@@ -56,7 +56,9 @@
 </div>
 <script type="text/javascript" src="../../src/SeeColors/seeColors.js"></script>
 <script type="text/javascript">
-    new SeeColors("#t");
+    new SeeColors("#t").then((obj)=>{
+        console.log(obj);
+    });
 </script>
 </body>
 </html>

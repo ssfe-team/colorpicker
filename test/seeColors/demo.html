@@ -121,7 +121,9 @@
 <!--<canvas id="canvas" style="border:2px solid black;" width="1000" height="1000"></canvas>-->
 <script src="../../src/SeeColors/seeColors.js"></script>
 <script>
-    new SeeColors("#test");
+    new SeeColors("#test").then((obj)=>{
+        console.log(obj);
+    });
 //    var copy=document.createElement("div");
 //    copy.classList.add("copy");
 //    copy.appendChild(document.querySelector("#test").cloneNode());      //copy#test下的元素进行测试
