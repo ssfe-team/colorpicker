@@ -4,6 +4,47 @@
  */
 "use strict";
 class SeeColors{
+    constructor(obj,option){
+        this.dom=(obj.nodeType==1)?obj:this.$(obj);
+        this.option=option || {auto:"auto"};
+        this.controller();
+    }
+    controller(option){
+        if(this.option.auto=="auto"){
+            let dom=this.renderDom().outerHTML;
+            this.createImage(dom).then(function (img) {
+                // this.$("body").appendChild(img);
+                let can=this.createCanvasContainer(img);
+                // this.$("body").appendChild(can.canvas);
+                this.createSeeColorContainer(can.canvas);
+                // console.log(can.imgData);
+                this.addListener(can.canvas,(x,y)=>{
+                    if(this.$('.seeColors-follow-cooky').length==0){
+                        this.createFollowCookies();
+                    }
+                    let canvas=can.canvas,
+                        width=canvas.width,
+                        height=canvas.height,
+                        top=canvas.offsetTop-this.$("body").scrollTop,
+                        left=canvas.offsetLeft-this.$("body").scrollLeft,
+                        mX=x-left,
+                        mY=y-top,
+                        pixel=mY*width+mX;
+                    this.setFollowCookies(mX+50,mY,"rgba("+
+                        can.imgData[(pixel-1)*4]+","+
+                        can.imgData[(pixel-1)*4+1]+","+
+                        can.imgData[(pixel-1)*4+2]+","+
+                        can.imgData[(pixel-1)*4+3]/255+")");
+                    console.log(mX+"  "+mY+
+                        "rgba("+
+                        can.imgData[(pixel-1)*4]+","+
+                        can.imgData[(pixel-1)*4+1]+","+
+                        can.imgData[(pixel-1)*4+2]+","+
+                        can.imgData[(pixel-1)*4+3]/255+")");
+                });
+            }.bind(this));
+        }
+    }
     $(sele){
         return document.querySelector(sele);
     }
@@ -38,43 +79,18 @@ class SeeColors{
     getStyle(ele){
         return window.getComputedStyle? window.getComputedStyle(ele, null):ele.currentStyle;
     }
-    constructor(obj,option){
-        this.dom=(obj.nodeType==1)?obj:this.$(obj);
-        this.option=option || {auto:"auto"};
-        this.controller();
-    }
-    controller(option){
-        if(this.option.auto=="auto"){
-            let dom=this.renderDom().outerHTML;
-            this.createImage(dom).then(function (img) {
-                // this.$("body").appendChild(img);
-                let can=this.createCanvasContainer(img);
-                this.$("body").appendChild(can.canvas);
-                console.log(can.imgData);
-                this.addListener(can.canvas,(x,y)=>{
-                    let canvas=can.canvas,
-                        width=canvas.width,
-                        height=canvas.height,
-                        top=canvas.offsetTop-this.$("body").scrollTop,
-                        left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=x-left,
-                        mY=y-top,
-                        pixel=mY*width+mX;
-                    console.log(mX+"  "+mY+
-                        "rgba("+
-                        can.imgData[(pixel-1)*4]+","+
-                        can.imgData[(pixel-1)*4+1]+","+
-                        can.imgData[(pixel-1)*4+2]+","+
-                        can.imgData[(pixel-1)*4+3]/255+")");
-                });
-            }.bind(this));
-
-        }
-    }
     addListener(container,fn){
         container.addEventListener("mousemove",()=>{
             let mouseLocation=this.getMouseLocation();
             fn(mouseLocation.mouseX,mouseLocation.mouseY);
+        },false);
+        container.addEventListener("mouseover",()=>{
+            let mouseLocation=this.getMouseLocation();
+            this.createFollowCookies();
+            this.setFollowCookies(mouseLocation.mouseX,mouseLocation.mouseY)
+        },false);
+        container.addEventListener("mouseout",()=>{
+            this.removeFollowCookies();
         },false);
     }
     renderDom(){
@@ -91,7 +107,7 @@ class SeeColors{
             }
         }
         this.setStyle(dom,copy.children[0]);
-        // console.log(copy);
+        console.log(copy);
         return copy;
     }
     createImage(str){
@@ -108,7 +124,10 @@ class SeeColors{
                     </foreignObject>
                 </switch>
             </svg>`;
-        let src ='data:image/svg+xml;base64,'+btoa(data);
+        let b2a=(data)=>{
+            return (btoa instanceof Function)?btoa(data):window.btoa(data);
+        };
+        let src ='data:image/svg+xml;base64,'+b2a(unescape(encodeURIComponent(data)));
         let img=new Image;
         img.src=src;
         img.crossorigin="anonymous";
@@ -137,5 +156,42 @@ class SeeColors{
             ctx:ctx,
             imgData:imgData
         }
+    }
+    createSeeColorContainer(canvas){
+        let dom=this.dom,
+            top=dom.offsetTop,
+            left=dom.offsetLeft,
+            container=document.createElement("div");
+        container.style.width=this.getStyle(this.$('body')).width;
+        container.style.height=this.getStyle(this.$('body')).height;
+        container.style.position="absolute";
+        container.style.top="0";
+        container.style.left="0";
+        container.style.zIndex="999";
+        container.style.backgroundColor="rgba(255,255,255,.6)";
+        container.appendChild(canvas);
+        canvas.style.position="absolute";
+        canvas.style.top=top;
+        canvas.style.left=left;
+        canvas.style.zIndex="1000";
+        this.$("body").appendChild(container);
+    }
+    createFollowCookies(){
+        let cooky=document.createElement("div");
+        cooky.classList.add('seeColors-follow-cooky');
+        cooky.style.position="absolute";
+        cooky.style.border="2px black solid";
+        cooky.style.width="50px";
+        cooky.style.height="50px";
+        this.$("body").appendChild(cooky);
+    }
+    removeFollowCookies(){
+        this.$('.seeColors-follow-cooky').remove();
+    }
+    setFollowCookies(l,t,c){
+        this.$('.seeColors-follow-cooky').style.zIndex="1001";
+        this.$('.seeColors-follow-cooky').style.top=t+"px";
+        this.$('.seeColors-follow-cooky').style.left=l+"px";
+        this.$('.seeColors-follow-cooky').style.backgroundColor=c;
     }
 }
