@@ -42,7 +42,9 @@ class SeeColors{
                         can.imgData[(pixel-1)*4+2]+","+
                         can.imgData[(pixel-1)*4+3]/255+")");
                 });
-            }.bind(this));
+            }.bind(this)).catch((e)=>{
+                console.log(e);
+            });
         }
     }
     $(sele){
@@ -161,9 +163,18 @@ class SeeColors{
         let dom=this.dom,
             top=dom.offsetTop,
             left=dom.offsetLeft,
-            container=document.createElement("div");
-        container.style.width=this.getStyle(this.$('body')).width;
-        container.style.height=this.getStyle(this.$('body')).height;
+            container=document.createElement("div"),
+            style=this.getStyle(this.$('body'));
+        container.style.width=style.width.split("px")[0]
+            -(-style.paddingLeft.split("px")[0]
+            -style.marginLeft.split("px")[0]
+            -style.paddingRight.split("px")[0]
+            -style.marginRight.split("px")[0])+"px";
+        container.style.height=style.height.split("px")[0]
+            -(-style.paddingTop.split("px")[0]
+            -style.marginTop.split("px")[0]
+            -style.paddingTop.split("px")[0]
+            -style.marginTop.split("px")[0])+"px";
         container.style.position="absolute";
         container.style.top="0";
         container.style.left="0";
@@ -171,8 +182,8 @@ class SeeColors{
         container.style.backgroundColor="rgba(255,255,255,.6)";
         container.appendChild(canvas);
         canvas.style.position="absolute";
-        canvas.style.top=top;
-        canvas.style.left=left;
+        canvas.style.top=top+"px";
+        canvas.style.left=left+"px";
         canvas.style.zIndex="1000";
         this.$("body").appendChild(container);
     }
@@ -180,7 +191,8 @@ class SeeColors{
         let cooky=document.createElement("div");
         cooky.classList.add('seeColors-follow-cooky');
         cooky.style.position="absolute";
-        cooky.style.border="2px black solid";
+        cooky.style.border="1px black solid";
+        // cooky.style.borderRadius="50px";
         cooky.style.width="50px";
         cooky.style.height="50px";
         this.$("body").appendChild(cooky);
@@ -189,6 +201,7 @@ class SeeColors{
         this.$('.seeColors-follow-cooky').remove();
     }
     setFollowCookies(l,t,c){
+
         this.$('.seeColors-follow-cooky').style.zIndex="1001";
         this.$('.seeColors-follow-cooky').style.top=t+"px";
         this.$('.seeColors-follow-cooky').style.left=l+"px";
