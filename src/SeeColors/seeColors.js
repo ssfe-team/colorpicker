@@ -1,9 +1,20 @@
 /**
  * seeColors
  * Created by suti on 2016/11/14.
+ *
+ * 原理：
+ *  new SeeColors(it) > 1.遍历it的所有子节点及其样式并复制 > 2.根据复制出来的节点信息生成一张图片 >
+ *    3.将图片放到canvas里并提取图片信息 > 4.为canvas添加响应{ 1)."hover"时在鼠标旁边添加一个跟随的
+ *    方框显示鼠标指中的颜色； 2)."leave"时去掉那个的方框； 3)."click"时返回当前像素点信息(颜色) }；
+ *  注意：
+ *   生成canvas时就把像素信息遍历出来，移动鼠标时只需要在数组里取值就可以；
+ *   因为生成图片或等待点击都是异步的，因此用到几个 Promise；
+ *  示例：
+ *   new SeeColors("#item").then(it=>{...});  "..."为取完颜色后的操作，it为渠道的像素颜色
  */
 "use strict";
 class SeeColors{
+    //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
         this.option=option || {auto:"auto"};
@@ -14,7 +25,8 @@ class SeeColors{
             });
         });
     }
-    controller(option){
+    //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
+    controller(){
         if(this.option.auto=="auto"){
             let dom=this.renderDom().outerHTML;
             return this.createImage(dom).then(function (img) {
@@ -81,6 +93,7 @@ class SeeColors{
     $s(sele){
         return document.querySelectorAll(sele);
     }
+    //获取鼠标坐标
     getMouseLocation(){
         let e=event || window.event;
         return {
@@ -88,12 +101,14 @@ class SeeColors{
             mouseY:e.clientY
         };
     }
+    //遍历并复制dom，ele为被拷贝节点，copy为拷贝节点
     findRom(ele,copy){
         for(let i=0; i<ele.childNodes.length;i++){
             copy.appendChild(ele.childNodes[i].cloneNode());
             this.findRom(ele.childNodes[i],copy.childNodes[i]);
         }
     }
+    //遍历并赋值样式，ele为被拷贝样式的节点，copy为拷贝样式的节点
     setStyle(ele,copy,c){
         for(let i=0; i<ele.children.length;i++){
             for(let style in this.getStyle(ele.children[i])){
@@ -106,9 +121,11 @@ class SeeColors{
             this.setStyle(ele.children[i],copy.children[i]);
         }
     }
+    //获取ele的样式
     getStyle(ele){
         return window.getComputedStyle? window.getComputedStyle(ele, null):ele.currentStyle;
     }
+    //为container添加响应，fn为mousemove的响应，fin为click的响应
     addListener(container,fn,fin){
         container.addEventListener("mousemove",()=>{
             let mouseLocation=this.getMouseLocation();
@@ -129,6 +146,7 @@ class SeeColors{
             },false);
         });
     }
+    //渲染dom（复制dom节点及属性），返回一个复制好了的父节点
     renderDom(){
         let dom=this.dom;
         let copy=document.createElement("div");
@@ -146,6 +164,7 @@ class SeeColors{
         console.log(copy);
         return copy;
     }
+    //根据传入的节点生成图片，返回一个Promise为当图片成功加载后的响应
     createImage(str){
         //use image/svg+xml;base64 仅兼容chrome
         let height=this.dom.offsetHeight,
@@ -177,6 +196,7 @@ class SeeColors{
             };
         });
     }
+    //根据图片创建一个和图片一样大小的canvas，并读取其每一个像素信息，返回该创建的canvas和像素信息
     createCanvasContainer(img){
         let height=this.dom.offsetHeight,
             width=this.dom.offsetWidth,
@@ -193,6 +213,7 @@ class SeeColors{
             imgData:imgData
         }
     }
+    //创建一个div标签，这个标签覆盖整个body体并为白色半透明，并为canvas设置位置。效果为：截屏时，this.dom以外的其他元素有模糊效果
     createSeeColorContainer(canvas){
         let dom=this.dom,
             domStyle=this.getStyle(dom),
@@ -225,6 +246,7 @@ class SeeColors{
         canvas.style.zIndex="1000";
         this.$("body").appendChild(container);
     }
+    //创建一个跟随鼠标的div
     createFollowCookies(){
         let cooky=document.createElement("div");
         cooky.classList.add('seeColors-follow-cooky');
@@ -235,9 +257,11 @@ class SeeColors{
         cooky.style.height="50px";
         this.$("body").appendChild(cooky);
     }
+    //删除跟随鼠标的div
     removeFollowCookies(){
         this.$('.seeColors-follow-cooky').remove();
     }
+    //为那个跟随鼠标的div提供位置和选中的颜色
     setFollowCookies(l,t,c,w,h){
         let left=(w-l>80)?l+40:l-60,
             top=t>50?(h-t>60?t:t-40):t+30;
@@ -246,6 +270,7 @@ class SeeColors{
         this.$('.seeColors-follow-cooky').style.left=left+"px";
         this.$('.seeColors-follow-cooky').style.backgroundColor=c;
     }
+    //退出处理，删除生成的类
     exit(){
         if(this.$(".seeColors-follow-cooky").length!=0)
             this.$(".seeColors-follow-cooky").remove();
