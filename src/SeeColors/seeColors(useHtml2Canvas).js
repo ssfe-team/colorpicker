@@ -14,7 +14,7 @@ class SeeColors{
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
         if(this.dom.tagName=="BODY")
-            this.dom.style.margin=0;
+            this.dom.style.overflow="hidden";
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
@@ -26,24 +26,20 @@ class SeeColors{
     //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
     controller(){
         if(this.option.auto=="auto"){
-            // let dom=this.renderDom().outerHTML;
             return this.createImage().then(function (can) {
-                // this.$("body").appendChild(img);
-                // let can=this.createCanvasContainer(img);
-                // console.log("ok")
                 this.createSeeColorContainer(can.canvas);
                 let canvas=can.canvas,
                     width=canvas.width,
                     height=canvas.height;
-                console.log(can.imgData);
+                console.log(canvas.width);
                 return this.addListener(can.canvas,(x,y)=>{
                     if(this.$('.seeColors-follow-cooky').length==0){
                         this.createFollowCookies();
                     }
                     let top=canvas.offsetTop-this.$("body").scrollTop,
                         left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=x-left,
-                        mY=y-top,
+                        mX=(this.dom.tagName=="BODY")?x-left:x,
+                        mY=(this.dom.tagName=="BODY")?y-top:y,
                         pixel=mY*width+mX;
                     this.setFollowCookies(mX,mY,"rgba("+
                         can.imgData[(pixel-1)*4]+","+
@@ -205,7 +201,7 @@ class SeeColors{
                 onrendered:function(canvas){
                     canvas.classList.add("seeColors-temp-canvas");
                     let ctx=canvas.getContext("2d");
-                    let imgData=ctx.getImageData(0,0,width,height).data;
+                    let imgData=ctx.getImageData(0,0,canvas.width,canvas.height).data;
                     resolve({
                         canvas:canvas,
                         ctx:ctx,
@@ -297,6 +293,7 @@ class SeeColors{
     exit(){
         if(this.$(".seeColors-follow-cooky").length!=0)
             this.$(".seeColors-follow-cooky").remove();
+        this.dom.style.overflow="";
         this.$(".seeColors-temp-canvas").remove();
         this.$(".seeColors-temp-container").remove();
     }
