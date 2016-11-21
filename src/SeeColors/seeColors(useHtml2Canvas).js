@@ -5,7 +5,6 @@
 /**
  * seeColors
  * Created by suti on 2016/11/14.
- *
  *   new SeeColors("#item").then(it=>{...});  "..."为取完颜色后的操作，it为渠道的像素颜色
  */
 "use strict";
@@ -14,6 +13,8 @@ class SeeColors{
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
+        if(this.dom.tagName=="BODY")
+            this.dom.style.margin=0;
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
@@ -25,8 +26,8 @@ class SeeColors{
     //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
     controller(){
         if(this.option.auto=="auto"){
-            let dom=this.renderDom().outerHTML;
-            return this.createImage(dom).then(function (can) {
+            // let dom=this.renderDom().outerHTML;
+            return this.createImage().then(function (can) {
                 // this.$("body").appendChild(img);
                 // let can=this.createCanvasContainer(img);
                 // console.log("ok")
@@ -49,8 +50,8 @@ class SeeColors{
                         can.imgData[(pixel-1)*4+1]+","+
                         can.imgData[(pixel-1)*4+2]+","+
                         can.imgData[(pixel-1)*4+3]/255+")",width,height);
-                    console.log(mX+"  "+mY+
-                        "rgba("+
+                    console.log(mX+","+mY+
+                        ",rgba("+
                         can.imgData[(pixel-1)*4]+","+
                         can.imgData[(pixel-1)*4+1]+","+
                         can.imgData[(pixel-1)*4+2]+","+
@@ -58,8 +59,8 @@ class SeeColors{
                 },(x,y)=>{
                     let top=canvas.offsetTop-this.$("body").scrollTop,
                         left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=x-left,
-                        mY=y-top,
+                        mX=(this.dom.tagName=="BODY")?x-left:x,
+                        mY=(this.dom.tagName=="BODY")?y-top:y,
                         pixel=mY*width+mX;
                     return{
                         pixelX:mX,
@@ -193,17 +194,17 @@ class SeeColors{
         //         reject();
         //     };
         // });
+        let height=(this.dom.tagName!="BODY")?this.dom.offsetHeight:document.body.clientHeight,
+            width=(this.dom.tagName!="BODY")?this.dom.offsetWidth:document.body.clientWidth;
+        // console.log(this.dom.offsetHeight+","+document.body.clientHeight)
+        // console.log(this.dom.offsetWidth+","+document.body.clientWidth)
         return new Promise((resolve,reject)=>{
             html2canvas(this.dom,{
+                width:width,
+                height:height,
                 onrendered:function(canvas){
-                    let height=this.dom.offsetHeight,
-                        width=this.dom.offsetWidth;
-                    // canvas=document.createElement("canvas");
                     canvas.classList.add("seeColors-temp-canvas");
-                    // canvas.width=width;
-                    // canvas.height=height;
                     let ctx=canvas.getContext("2d");
-                    // ctx.drawImage(img,0,0);
                     let imgData=ctx.getImageData(0,0,width,height).data;
                     resolve({
                         canvas:canvas,
@@ -258,10 +259,13 @@ class SeeColors{
         container.style.backgroundColor="rgba(255,255,255,.6)";
         container.appendChild(canvas);
         canvas.style.position="absolute";
-        canvas.style.top=top-(-domStyle.paddingTop.split("px")[0]
-            -domStyle.marginTop.split("px")[0])+"px";
-        canvas.style.left=left-(-domStyle.paddingLeft.split("px")[0]
-            -domStyle.marginLeft.split("px")[0])+"px";
+        if(this.dom.tagName=="BODY"){
+            canvas.style.top=0;
+            canvas.style.left=0;
+        }else {
+            canvas.style.top=top-(-domStyle.marginTop.split("px")[0])+"px";
+            canvas.style.left=left-(-domStyle.marginLeft.split("px")[0])+"px";
+        }
         canvas.style.zIndex="1000";
         this.$("body").appendChild(container);
     }
