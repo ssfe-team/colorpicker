@@ -1,0 +1,68 @@
+/*
+ * colorpicker.css
+ */
+
+.colorpicker {
+	position: absolute;
+	width: 220px;
+	height: 300px;
+	border-color: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 10px #ccc;
+	background-color: #fff;
+	z-index: 2000;
+}
+
+.colorpicker-panel {
+	position: relative;
+	width: 100%;
+	height: 140px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	background-color: red;
+}
+.colorpicker-panel-movebar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 12px;
+	height: 12px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.colorpicker-toolbar {
+	padding: 15px;
+	width: 100%;
+	height: 160px;
+	box-sizing: border-box;
+}
+.colorpicker-toolbar-tool {
+	text-align: center;
+	overflow: hidden;
+}
+.colorpicker-screen, .colorpicker-watch, .colorpicker-control {
+	display: inline-block;
+	float: left;
+}
+.colorpicker-screen {
+	margin-top: 5px;
+	width: 20px;
+	height: 20px;
+	background-image: url(./icon/picker.svg);
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+.colorpicker-screen:hover {
+	background-image: url(./icon/picker_hover.svg);
+}
+.colorpicker-watch {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background-color: blue;
+}
+.colorpicker-toobar-input {
+	margin-top: 20px;
+}
