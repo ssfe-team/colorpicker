@@ -239,9 +239,9 @@ class SeeColors{
         container.style.backgroundColor="rgba(255,255,255,.6)";
         container.appendChild(canvas);
         canvas.style.position="absolute";
-        canvas.style.top=top-(-domStyle.paddingTop.split("px")[0]
+        canvas.style.top=top-(
             -domStyle.marginTop.split("px")[0])+"px";
-        canvas.style.left=left-(-domStyle.paddingLeft.split("px")[0]
+        canvas.style.left=left-(
             -domStyle.marginLeft.split("px")[0])+"px";
         canvas.style.zIndex="1000";
         this.$("body").appendChild(container);
