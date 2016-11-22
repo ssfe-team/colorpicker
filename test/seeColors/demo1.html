@@ -4,20 +4,6 @@
     <meta charset="UTF-8">
     <title>demo</title>
     <style>
-        .feedback-overlay-black{
-            background-color:#000;
-            opacity:0.5;
-            position:absolute;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            margin:0;
-        }
-
-    </style>
-
-    <style>
         #it div{
             padding:20px;
             margin:0 auto;
@@ -50,15 +36,20 @@
                 <a href="#" style="background:white;" id="highlight">link with a highlight</a>.
                 <!--<hr />-->
                 <h2>More content</h2>
+                <img src="20.jpg" alt="" width="300px">
                 <div style="width:10px;height:10px;border-width:10px;padding:0;">a</div>
             </div>
             </div>
         </div>
     </div>
+    <div style="height: 300px;background-image: url('20.jpg');background-position: center;background-repeat: no-repeat">
+
+    </div>
 </div>
-<script type="text/javascript" src="../../src/SeeColors/seeColors.js"></script>
+<script type="text/javascript" src="../../src/SeeColors/html2canvas.min.js"></script>
+<script type="text/javascript" src="../../src/SeeColors/seeColors(useHtml2Canvas).js"></script>
 <script type="text/javascript">
-    new SeeColors("#it").then((obj)=>{
+    new SeeColors("body").then((obj)=>{
         console.log(obj);
     });
 </script>
