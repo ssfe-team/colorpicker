@@ -18,7 +18,14 @@
             background: #efefef;
             padding:10px;
         }
-
+        #it :before{
+            content: "1";
+            width: 30%;
+            height: 20px;
+            background-color:red ;
+            position: absolute;
+            top:20px;
+        }
         /*body{*/
             /*margin: 0;*/
         /*}*/
@@ -36,6 +43,7 @@
                 <a href="#" style="background:white;" id="highlight">link with a highlight</a>.
                 <!--<hr />-->
                 <h2>More content</h2>
+                <input type="button" onclick="a()" value="点击取色" style="width: 180px;height: 40px;background-color: aqua;border-radius: 4px">
                 <img src="20.jpg" alt="" width="300px">
                 <div style="width:10px;height:10px;border-width:10px;padding:0;">a</div>
             </div>
@@ -49,9 +57,12 @@
 <script type="text/javascript" src="../../src/SeeColors/html2canvas.min.js"></script>
 <script type="text/javascript" src="../../src/SeeColors/seeColors(useHtml2Canvas).js"></script>
 <script type="text/javascript">
-    new SeeColors("body").then((obj)=>{
-        console.log(obj);
-    });
+    function a() {
+        new SeeColors("#it").then((obj)=>{
+            console.log(obj);
+        });
+    }
+
 </script>
 </body>
 </html>
