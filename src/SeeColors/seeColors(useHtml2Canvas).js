@@ -31,8 +31,8 @@ class SeeColors{
                 let canvas=can.canvas,
                     width=canvas.width,
                     height=canvas.height;
-                console.log(canvas.width);
-                return this.addListener(canvas,(x,y)=>{
+                // console.log(canvas.width);
+                return this.addListener(this.$('.seeColors-temp-container'),(x,y)=>{
                     if(this.$('.seeColors-follow-cooky')==null){
                         this.createFollowCookies();
                     }
@@ -155,7 +155,6 @@ class SeeColors{
             }
         }
         this.setStyle(dom,copy.children[0]);
-        console.log(copy);
         return copy;
     }
     //根据传入的节点生成图片，返回一个Promise为当图片成功加载后的响应
@@ -191,8 +190,6 @@ class SeeColors{
         // });
         let height=(this.dom.tagName!="BODY")?this.dom.offsetHeight:document.body.clientHeight,
             width=(this.dom.tagName!="BODY")?this.dom.offsetWidth:document.body.clientWidth;
-        // console.log(this.dom.offsetHeight+","+document.body.clientHeight)
-        // console.log(this.dom.offsetWidth+","+document.body.clientWidth)
         return new Promise((resolve,reject)=>{
             html2canvas(this.dom,{
                 width:width,
@@ -287,7 +284,7 @@ class SeeColors{
                 cc.style.float="left";
                 cooky.appendChild(cc);
             }
-            this.$("body").appendChild(cooky);
+            this.$(".seeColors-temp-container").appendChild(cooky);
             this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderLeft="1px red solid";
             this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderTop="1px red solid";
             this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderRight="1px red solid";
@@ -302,13 +299,16 @@ class SeeColors{
     //删除跟随鼠标的div
     removeFollowCookies(t){
         this.$('.seeColors-follow-cooky').style.display="none";
-        if(t)
-            this.$('.seeColors-follow-cooky').remove();
+        // if(t){
+        //     console.log("remove2");
+        //     this.$('.seeColors-follow-cooky').remove();
+        // }
+
     }
     //为那个跟随鼠标的div提供位置和选中的颜色
     setFollowCookies(l,t,can,p,w,h){
-        let left=(w-l>110)?l+10:l-110,
-            top=t>20?(h-t>110?t+10:t-110):t+30,
+        let left=(w-l>110)?l+30:l-110,
+            top=t>20?(h-t>110?t+30:t-110):t+60,
             canvas=can.canvas,
             pl=p-4*65;
         // canvas.removeEventListener("mouseout",
