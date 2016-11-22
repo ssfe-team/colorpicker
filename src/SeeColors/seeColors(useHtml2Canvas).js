@@ -13,8 +13,8 @@ class SeeColors{
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
-        if(this.dom.tagName=="BODY")
-            this.dom.style.overflow="hidden";
+        // if(this.dom.tagName=="BODY")
+        //     this.dom.style.overflow="hidden";
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
@@ -38,8 +38,8 @@ class SeeColors{
                     }
                     let top=canvas.offsetTop-this.$("body").scrollTop,
                         left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=(this.dom.tagName=="BODY")?x-left:x,
-                        mY=(this.dom.tagName=="BODY")?y-top:y,
+                        mX=x-left,
+                        mY=y-top,
                         pixel=mY*width+mX;
                     this.setFollowCookies(mX,mY,"rgba("+
                         can.imgData[(pixel-1)*4]+","+
@@ -55,8 +55,8 @@ class SeeColors{
                 },(x,y)=>{
                     let top=canvas.offsetTop-this.$("body").scrollTop,
                         left=canvas.offsetLeft-this.$("body").scrollLeft,
-                        mX=(this.dom.tagName=="BODY")?x-left:x,
-                        mY=(this.dom.tagName=="BODY")?y-top:y,
+                        mX=x-left,
+                        mY=y-top,
                         pixel=mY*width+mX;
                     return{
                         pixelX:mX,
