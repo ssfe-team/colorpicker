@@ -13,8 +13,8 @@ class SeeColors{
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
-        // if(this.dom.tagName=="BODY")
-        //     this.dom.style.overflow="hidden";
+        if(this.$("body").screenTop!="0")
+            this.$("body").style.overflowY="hidden";
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
@@ -32,8 +32,8 @@ class SeeColors{
                     width=canvas.width,
                     height=canvas.height;
                 console.log(canvas.width);
-                return this.addListener(can.canvas,(x,y)=>{
-                    if(this.$('.seeColors-follow-cooky').length==0){
+                return this.addListener(canvas,(x,y)=>{
+                    if(this.$('.seeColors-follow-cooky')==null){
                         this.createFollowCookies();
                     }
                     let top=canvas.offsetTop-this.$("body").scrollTop,
@@ -41,11 +41,10 @@ class SeeColors{
                         mX=x-left,
                         mY=y-top,
                         pixel=mY*width+mX;
-                    this.setFollowCookies(mX,mY,"rgba("+
-                        can.imgData[(pixel-1)*4]+","+
-                        can.imgData[(pixel-1)*4+1]+","+
-                        can.imgData[(pixel-1)*4+2]+","+
-                        can.imgData[(pixel-1)*4+3]/255+")",width,height);
+                    this.setFollowCookies(mX,mY+canvas.offsetTop,can,pixel,width,height).then(function(){
+                        // canvas.addEventListener("mouseout",
+                        //     this.removeFollowCookies.bind(this),false);
+                    }.bind(this));
                     console.log(mX+","+mY+
                         ",rgba("+
                         can.imgData[(pixel-1)*4]+","+
@@ -129,11 +128,11 @@ class SeeColors{
         container.addEventListener("mouseover",()=>{
             let mouseLocation=this.getMouseLocation();
             this.createFollowCookies();
-            this.setFollowCookies(mouseLocation.mouseX,mouseLocation.mouseY)
+            // this.setFollowCookies(mouseLocation.mouseX,mouseLocation.mouseY)
         },false);
-        container.addEventListener("mouseout",()=>{
-            this.removeFollowCookies();
-        },false);
+        container.addEventListener("mouseout",
+            this.removeFollowCookies.bind(this)
+            ,false);
         return new Promise((resolve,reject)=>{
             container.addEventListener("click",()=>{
                 let mouseLocation=this.getMouseLocation();
@@ -256,10 +255,10 @@ class SeeColors{
         container.appendChild(canvas);
         canvas.style.position="absolute";
         if(this.dom.tagName=="BODY"){
-            canvas.style.top=0;
+            canvas.style.top=this.$("body").scrollTop+"px";
             canvas.style.left=0;
         }else {
-            canvas.style.top=top-(-domStyle.marginTop.split("px")[0])+"px";
+            canvas.style.top=top-(-domStyle.marginTop.split("px")[0]-this.$("body").scrollTop)+"px";
             canvas.style.left=left-(-domStyle.marginLeft.split("px")[0])+"px";
         }
         canvas.style.zIndex="1000";
@@ -267,33 +266,75 @@ class SeeColors{
     }
     //创建一个跟随鼠标的div
     createFollowCookies(){
-        let cooky=document.createElement("div");
-        cooky.classList.add('seeColors-follow-cooky');
-        cooky.style.position="absolute";
-        cooky.style.border="1px black solid";
-        // cooky.style.borderRadius="50px";
-        cooky.style.width="50px";
-        cooky.style.height="50px";
-        this.$("body").appendChild(cooky);
+        if(!this.$('.seeColors-follow-cooky')){
+
+            let cooky=document.createElement("div");
+            cooky.classList.add('seeColors-follow-cooky');
+            cooky.style.position="absolute";
+            cooky.style.border="1px black solid";
+            // cooky.style.borderTop="1px black solid";
+            // cooky.style.borderRadius="50px";
+            cooky.style.width="122px";
+            cooky.style.height="122px";
+            cooky.style.borderRadius="61px";
+            cooky.style.overflow="hidden";
+            for(let i=0;i<121;i++){
+                let cc=document.createElement("div");
+                cc.style.width="10px";
+                cc.style.height="10px";
+                cc.style.borderLeft="1px #ccc solid";
+                cc.style.borderTop="1px #ccc solid";
+                cc.style.float="left";
+                cooky.appendChild(cc);
+            }
+            this.$("body").appendChild(cooky);
+            this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderLeft="1px red solid";
+            this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderTop="1px red solid";
+            this.$('.seeColors-follow-cooky > div:nth-child(61)').style.borderRight="1px red solid";
+            this.$('.seeColors-follow-cooky > div:nth-child(62)').style.borderLeft="0px";
+            this.$('.seeColors-follow-cooky > div:nth-child(72)').style.borderTop="1px red solid";
+            this.$('.seeColors-follow-cooky').style.transition="all 0 linear";
+            this.$('.seeColors-follow-cooky > div').style.transition="all 0.1s linear";
+        }else {
+            this.$('.seeColors-follow-cooky').style.display="block";
+        }
     }
     //删除跟随鼠标的div
-    removeFollowCookies(){
-        this.$('.seeColors-follow-cooky').remove();
+    removeFollowCookies(t){
+        this.$('.seeColors-follow-cooky').style.display="none";
+        if(t)
+            this.$('.seeColors-follow-cooky').remove();
     }
     //为那个跟随鼠标的div提供位置和选中的颜色
-    setFollowCookies(l,t,c,w,h){
-        let left=(w-l>80)?l+40:l-60,
-            top=t>50?(h-t>60?t:t-40):t+30;
-        this.$('.seeColors-follow-cooky').style.zIndex="1001";
-        this.$('.seeColors-follow-cooky').style.top=top+"px";
-        this.$('.seeColors-follow-cooky').style.left=left+"px";
-        this.$('.seeColors-follow-cooky').style.backgroundColor=c;
+    setFollowCookies(l,t,can,p,w,h){
+        let left=(w-l>110)?l+10:l-110,
+            top=t>20?(h-t>110?t+10:t-110):t+30,
+            canvas=can.canvas,
+            pl=p-4*65;
+        // canvas.removeEventListener("mouseout",
+        //     this.removeFollowCookies
+        //     ,false);
+        return new Promise((resolve,reject)=>{
+            this.$('.seeColors-follow-cooky').style.zIndex="1001";
+            this.$('.seeColors-follow-cooky').style.top=t+"px";
+            this.$('.seeColors-follow-cooky').style.left=l+"px";
+            for(let i=0;i<121;i++){
+                let ci=p-(5*canvas.width+5)+(Number.parseInt(i/11))*canvas.width+i%11,
+                    n=i+1;
+                this.$('.seeColors-follow-cooky > div:nth-child('+n+')').style.backgroundColor="rgba("+
+                    can.imgData[(ci-1)*4]+","+
+                    can.imgData[(ci-1)*4+1]+","+
+                    can.imgData[(ci-1)*4+2]+","+
+                    can.imgData[(ci-1)*4+3]/255+")";
+            }
+            resolve();
+        });
     }
     //退出处理，删除生成的类
     exit(){
-        if(this.$(".seeColors-follow-cooky").length!=0)
+        if(this.$(".seeColors-follow-cooky"))
             this.$(".seeColors-follow-cooky").remove();
-        this.dom.style.overflow="";
+        this.$("body").style.overflowY="auto";
         this.$(".seeColors-temp-canvas").remove();
         this.$(".seeColors-temp-container").remove();
     }
