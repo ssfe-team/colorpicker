@@ -7,24 +7,79 @@
     </head>
     <body>
         <div class="colorpicker">
-          <div class="colorpicker-panel">
-              <div class="colorpicker-panel-movebar"></div>
-          </div>
-          <div class="colorpicker-toolbar">
-              <div class="colorpicker-toolbar-tool">
-                  <div class="colorpicker-screen"></div>
-                  <div class="colorpicker-watch"></div>
-                  <div class="colorpicker-control">
-                      <div class="colorpicker-control-solid"></div>
-                      <div class="colorpicker-control-opacity"></div>
-                  </div>
-              </div>
-              <div class="colorpicker-toobar-input">
-                  <div class="colorpicker-toolbar-input-hex"></div>
-                  <div class="colorpicker-toolbar-input-rgba"></div>
-                  <div class="colorpicker-toolbar-input-hsla"></div>
-              </div>
-          </div>
+            <div class="colorpicker-panel">
+                <div class="colorpicker-panel-mask"></div>
+                <div class="colorpicker-panel-movebar"></div>
+            </div>
+            <div class="colorpicker-toolbar">
+                <div class="colorpicker-toolbar-tool">
+                    <div class="colorpicker-screen"></div>
+                    <div class="colorpicker-watch"></div>
+                    <div class="colorpicker-control">
+                        <div class="colorpicker-control-solid">
+                          <input type="range" name="">
+                        </div>
+                        <div class="colorpicker-control-opacity">
+                          <input type="range" name="">
+                        </div>
+                    </div>
+                </div>
+                <div class="colorpicker-toolbar-input">
+                    <div class="colorpicker-toolbar-input-hex">
+                        <input type="text">
+                        <div class="colorpicker-toolbar-input-text">HEX</div>
+                    </div>
+                    <div class="colorpicker-toolbar-input-rgba">
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">R</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">G</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">B</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">A</div>
+                        </div>
+                    </div>
+                    <div class="colorpicker-toolbar-input-hsla">
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">H</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">S</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">L</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">A</div>
+                        </div>
+                    </div>
+                    <div class="flip"></div>
+                </div>
+            </div>
         </div>
+        <script type="text/javascript">
+            /* This is a demo */
+            var 
+                qs = function(selector) {
+                    return document.querySelector(selector);
+                },
+                qsAll = function(selector) {
+                    return document.querySelectorAll(selector);
+                };
+
+
+        </script>
     </body>
 </html>

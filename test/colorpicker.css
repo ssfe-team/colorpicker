@@ -5,7 +5,7 @@
 .colorpicker {
 	position: absolute;
 	width: 220px;
-	height: 300px;
+	height: 280px;
 	border-color: #fff;
 	border-radius: 3px;
 	box-shadow: 0 0 10px #ccc;
@@ -19,7 +19,13 @@
 	height: 140px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
-	background-color: red;
+	background-color: #cdf;
+}
+.colorpicker-panel-mask {
+	width: 100%;
+	height: 100%;
+	background-image: url(./img/black_gradient.png);
+	background-size: 100% 100%;
 }
 .colorpicker-panel-movebar {
 	position: absolute;
@@ -35,21 +41,20 @@
 .colorpicker-toolbar {
 	padding: 15px;
 	width: 100%;
-	height: 160px;
+	height: 140px;
 	box-sizing: border-box;
 }
 .colorpicker-toolbar-tool {
-	text-align: center;
-	overflow: hidden;
+	/*text-align: center;*/
 }
 .colorpicker-screen, .colorpicker-watch, .colorpicker-control {
 	display: inline-block;
-	float: left;
+	vertical-align: middle;
 }
 .colorpicker-screen {
 	margin-top: 5px;
-	width: 20px;
-	height: 20px;
+	width: 15px;
+	height: 15px;
 	background-image: url(./icon/picker.svg);
 	background-size: 100% 100%;
 	cursor: pointer;
@@ -58,11 +63,130 @@
 	background-image: url(./icon/picker_hover.svg);
 }
 .colorpicker-watch {
-	width: 30px;
-	height: 30px;
+	margin-left: 10px;
+	width: 20px;
+	height: 20px;
 	border-radius: 50%;
 	background-color: blue;
 }
-.colorpicker-toobar-input {
-	margin-top: 20px;
+.colorpicker-control {
+	margin-left: 10px;
+	width: 125px;
+}
+.colorpicker-control input {
+	width: 100%;
+}
+input[type=range] {
+	-webkit-appearance: none;
+	outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+	width: 100%;
+	height: 13px;
+	background: #ccc;
+	border-radius: 3px;
+	cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+	margin-top: -2px;
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 1px 1px 3px #ccc;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+input[type=range]::-moz-range-track {
+	width: 100%;
+	height: 13px;
+	background: #ccc;
+	border-radius: 3px;
+	cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+    margin-top: -2px;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 1px 1px 3px #ccc;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+input[type=range]::-ms-track {
+	width: 100%;
+	height: 13px;
+	background: #ccc;
+	border-radius: 3px;
+	cursor: pointer;
+}
+input[type=range]::-ms-thumb {
+	margin-top: -2px;
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 1px 1px 3px #ccc;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+.colorpicker-toolbar-input {
+	position: relative;
+	padding-top: 15px;
+	height: 60px;
+}
+.colorpicker-toolbar-input input {
+	height: 25px;
+	outline: 0;
+	border: 1px solid #cecece;
+	border-radius: 2px;
+	text-align: center;
+	font-size: 14px;
+}
+.colorpicker-toolbar-input-text {
+	margin-top: 10px;
+	text-align: center;
+	font-size: 14px;
+	color: #909090;
+}
+.colorpicker-toolbar-input-hex, .colorpicker-toolbar-input-rgba, .colorpicker-toolbar-input-hsla {
+	width: 160px;
+}
+.colorpicker-toolbar-input-rgba, .colorpicker-toolbar-input-hsla {
+	text-align: center;
+}
+.colorpicker-toolbar-input-hex {
+	display: none;
+}
+.colorpicker-toolbar-input-rgba {
+	/*display: none;*/
+}
+.colorpicker-toolbar-input-hsla {
+	display: none;
+}
+.colorpicker-toolbar-input-hex input {
+	width: 100%;	
+}
+.colorpicker-toolbar-input-wrap {
+	display: inline-block;
+	width: 23%;
+}
+.colorpicker-toolbar-input-wrap input {
+	width: 100%;
+}
+
+.flip {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	width: 15px;
+	height: 20px;
+	transform: translate(0, -50%);
+	background-image: url(./icon/flip.svg);
+	background-size: 100% 100%;
+	cursor: pointer;
+}
+.flip:hover {
+	background-color: #ccc;
 }
