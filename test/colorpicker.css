@@ -190,3 +190,27 @@ input[type=range]::-ms-thumb {
 .flip:hover {
 	background-color: #ccc;
 }
+
+/* Animation */
+@keyframes fadeIn {
+	0% {
+		opacity: 0
+	},
+	100% {
+		opacity: 1
+	}
+}
+@keyframes fadeOut {
+	0% {
+		opacity: 1
+	},
+	100% {
+		opacity: 0
+	}
+}
+.fadeIn {
+	animation: fadeIn .5s;
+}
+.fadeOut {
+	animation: fadeOut .5s;
+}
