@@ -10,7 +10,7 @@ gulp.task('compile', function() {
 		.pipe(babel({
 			presets: ['es2015']
 		}))
-		.pipe(concat('colorpicker.js'))
+		// .pipe(concat('colorpicker.js'))
 		.pipe(gulp.dest('dist'));
 });
 
