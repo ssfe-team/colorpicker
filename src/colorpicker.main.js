@@ -15,6 +15,11 @@ class Main {
 		return document.querySelectorAll(selector);
 	}
 
+	/* Trigger to fadeIn and fadeOut */
+	fade(target) {
+		target.toggleClassList('fadeIn fadeOut');
+	}
+
 	/* Simple animate */
 	animate(o, para, cb) {
 		let {top = '0', left = '0', bottom = '0', right = '0'} = para;
@@ -28,6 +33,75 @@ class Main {
 			return;
 		} 
 		cb();
+	}
+
+	/* Appear */
+	appear(trigger) {
+		const templete = `
+			<div class="colorpicker">
+			    <div class="colorpicker-panel">
+			        <div class="colorpicker-panel-mask"></div>
+			        <div class="colorpicker-panel-movebar" id="js-movebar"></div>
+			    </div>
+			    <div class="colorpicker-toolbar">
+			        <div class="colorpicker-toolbar-tool">
+			            <div class="colorpicker-screen"></div>
+			            <div class="colorpicker-watch"></div>
+			            <div class="colorpicker-control">
+			                <div class="colorpicker-control-solid">
+			                  <input type="range" name="" value="10" min="1" max="10">
+			                </div>
+			                <div class="colorpicker-control-opacity">
+			                  <input type="range" name="" value="10" min="1" max="10" step="1">
+			                </div>
+			            </div>
+			        </div>
+			        <div class="colorpicker-toolbar-input">
+			            <div class="colorpicker-toolbar-input-hex">
+			                <input type="text">
+			                <div class="colorpicker-toolbar-input-text">HEX</div>
+			            </div>
+			            <div class="colorpicker-toolbar-input-rgba">
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">R</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">G</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">B</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">A</div>
+			                </div>
+			            </div>
+			            <div class="colorpicker-toolbar-input-hsla">
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">H</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">S</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">L</div>
+			                </div>
+			                <div class="colorpicker-toolbar-input-wrap">
+			                    <input type="text">
+			                    <div class="colorpicker-toolbar-input-text">A</div>
+			                </div>
+			            </div>
+			            <div class="flip"></div>
+			        </div>
+			    </div>
+			</div>
+		`;
 	}
 
 	/* The movebar and control move */
