@@ -9,7 +9,7 @@
         <div class="colorpicker">
             <div class="colorpicker-panel">
                 <div class="colorpicker-panel-mask"></div>
-                <div class="colorpicker-panel-movebar"></div>
+                <div class="colorpicker-panel-movebar" id="js-movebar"></div>
             </div>
             <div class="colorpicker-toolbar">
                 <div class="colorpicker-toolbar-tool">
@@ -17,10 +17,10 @@
                     <div class="colorpicker-watch"></div>
                     <div class="colorpicker-control">
                         <div class="colorpicker-control-solid">
-                          <input type="range" name="">
+                          <input type="range" name="" value="10" min="1" max="10">
                         </div>
                         <div class="colorpicker-control-opacity">
-                          <input type="range" name="">
+                          <input type="range" name="" value="10" min="1" max="10" step="1">
                         </div>
                     </div>
                 </div>
@@ -69,17 +69,6 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            /* This is a demo */
-            var 
-                qs = function(selector) {
-                    return document.querySelector(selector);
-                },
-                qsAll = function(selector) {
-                    return document.querySelectorAll(selector);
-                };
-
-
-        </script>
+        <script type="text/javascript" src="./colorpicker.js"></script>
     </body>
 </html>
