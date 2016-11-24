@@ -142,7 +142,8 @@ var Main = function () {
 				target.addEventListener(type, handler);
 			};
 
-			var movebar = s.qs('#js-movebar');
+			var movebar = s.qs('#js-movebar'),
+			    panel = s.qs('#js-panel');
 
 			//Start moving 
 			event_bind(movebar, 'mousedown', function (event) {
@@ -159,13 +160,18 @@ var Main = function () {
 			});
 
 			//Stop moving
-			event_bind(movebar, 'mouseup', function (event) {
-				// let moveList = ['mousedown', 'mousemove', 'mouseup'];
-
-				// for (var i = 0, len = moveList.length; i < len; ++i) {
-				// 	this.removeEventListener(moveList[i]);
-				// }
+			event_bind(movebar, 'mouseup', function () {
 				this.dataset.on = 'off';
+			});
+
+			//Moveout
+			event_bind(movebar, 'mouseout', function () {
+				this.dataset.on = 'off';
+			});
+
+			//Panel click to move 
+			event_bind(panel, 'click', function (event) {
+				box.move(this, event);
 			});
 		}
 	}]);
@@ -227,7 +233,8 @@ var Box = function () {
 		value: function move(target, event) {
 			var s = new Selector();
 
-			var panel = s.qs('#js-panel');
+			var movebar = s.qs('#js-movebar'),
+			    panel = s.qs('#js-panel');
 
 			var offsetX = panel.offsetLeft,
 			    offsetY = panel.offsetTop,
@@ -236,10 +243,9 @@ var Box = function () {
 			    x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 			    y = Math.round(event.pageY - offsetY - offsetHeight / 2);
 
-			// Touch support
-			// if (event.originalEvent.changedTouches) {
-			// 	x = event.originalEvent.changedTouches[0].pageX - offsetX,
-			// 	y = event.originalEvent.changedTouches[0].pageY - offsetY;
+			// if (target === panel) {
+			// 	x = Math.round(event.pageX - offsetX),
+			// 	y = Math.round(event.pageY - offsetY);
 			// }
 
 			if (x < 0) x = 0;
@@ -247,8 +253,15 @@ var Box = function () {
 			if (x > panel.clientWidth - offsetWidth) x = panel.clientWidth - offsetWidth;
 			if (y > panel.clientHeight - offsetHeight) y = panel.clientHeight - offsetHeight;
 
-			if (target === s.qs('#js-movebar')) {
+			if (target === movebar) {
 				this.animate(target, {
+					top: y + 'px',
+					left: x + 'px'
+				});
+			} else if (target === panel) {
+				x = Math.round(event.pageX - offsetX), y = Math.round(event.pageY - offsetY);
+
+				this.animate(movebar, {
 					top: y + 'px',
 					left: x + 'px'
 				});
