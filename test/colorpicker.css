@@ -23,6 +23,7 @@
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
 	background-color: #cdf;
+	overflow: hidden;
 }
 .colorpicker-panel-mask {
 	width: 100%;
@@ -75,63 +76,31 @@
 .colorpicker-control {
 	margin-left: 10px;
 	width: 125px;
+	height: 35px;
 }
-.colorpicker-control input {
-	width: 100%;
-}
-input[type=range] {
-	-webkit-appearance: none;
-	outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-	width: 100%;
-	height: 13px;
-	background: #ccc;
-	border-radius: 3px;
-	cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-	margin-top: -2px;
+.colorpicker-control-solid, .colorpicker-control-opacity {
+	position: relative;
 	height: 15px;
-	width: 15px;
-	border-radius: 50%;
-	background: #fff;
-	box-shadow: 1px 1px 3px #ccc;
-	-webkit-appearance: none;
-	cursor: pointer;
 }
-input[type=range]::-moz-range-track {
-	width: 100%;
-	height: 13px;
-	background: #ccc;
+.colorpicker-control-solid {
 	border-radius: 3px;
-	cursor: pointer;
+	background: -webkit-linear-gradient(to right, #ff0000, #ff007a, #ff00cc, #d300ff, #7500ff, #2300ff, #0024ff, #0076ff, #00b1ff, #00f8ff, #00ffb4, #00ff56, #00ff0f, #4fff00, #d0ff00, #fff300, #ffc400, #ff9500, #ff6600, #ff0000);
+	background:         linear-gradient(to right, #ff0000, #ff007a, #ff00cc, #d300ff, #7500ff, #2300ff, #0024ff, #0076ff, #00b1ff, #00f8ff, #00ffb4, #00ff56, #00ff0f, #4fff00, #d0ff00, #fff300, #ffc400, #ff9500, #ff6600, #ff0000);
 }
-input[type=range]::-moz-range-thumb {
-    margin-top: -2px;
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 1px 1px 3px #ccc;
-    -webkit-appearance: none;
-    cursor: pointer;
-}
-input[type=range]::-ms-track {
-	width: 100%;
-	height: 13px;
-	background: #ccc;
+.colorpicker-control-opacity {
+	margin-top: 5px;
 	border-radius: 3px;
-	cursor: pointer;
+	background: linear-gradient(to right, #ccc, #fff);
 }
-input[type=range]::-ms-thumb {
-	margin-top: -2px;
-	height: 15px;
-	width: 15px;
+.colorpicker-control-movebar {
+	position: absolute;
+	top: -2px;
+	right: -8px;
+	width: 17px;
+	height: 17px;
 	border-radius: 50%;
-	background: #fff;
-	box-shadow: 1px 1px 3px #ccc;
-	-webkit-appearance: none;
+	box-shadow: 1px 1px 5px #ccc;
+	background-color: #fff;
 	cursor: pointer;
 }
 .colorpicker-toolbar-input {
