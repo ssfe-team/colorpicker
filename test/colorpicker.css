@@ -1,7 +1,10 @@
 /*
  * colorpicker.css
  */
-
+* {
+	margin: 0;
+	padding: 0;
+}
 .colorpicker {
 	position: absolute;
 	width: 220px;
@@ -29,7 +32,7 @@
 }
 .colorpicker-panel-movebar {
 	position: absolute;
-	bottom: 0;
+	top: 0;
 	left: 0;
 	width: 12px;
 	height: 12px;
