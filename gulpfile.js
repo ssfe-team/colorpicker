@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 
 //compile and package
 gulp.task('compile', function() {
-	gulp.src('src/*.js')
+	gulp.src('src/colorpicker.main.js')
 		.pipe(babel({
 			presets: ['es2015']
 		}))
