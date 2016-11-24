@@ -119,26 +119,32 @@ class Main {
 		}
 
 		const movebar = s.qs('#js-movebar'),
-				panel = s.qs('#js-panel');
+				panel = s.qs('#js-panel'),
+				solid_movebar = s.qs('#js-solid-movebar'),
+				opacity_movebar = s.qs('#js-opacity-movebar');
+		
+		const queue = [movebar, solid_movebar, opacity_movebar];
 
-		//Start moving 
-		event_bind(movebar, 'mousedown', function(event) {
-		    event.preventDefault();
-		    this.dataset.on = 'on';
-		    box.move(this, event);
-		});
+		for (var i = 0, len = queue.length; i < len; ++i) {
+			//Start moving 
+			event_bind(queue[i], 'mousedown', function(event) {
+			    event.preventDefault();
+			    this.dataset.on = 'on';
+			    box.move(this, event);
+			});
 
-		//Moving
-		event_bind(movebar, 'mousemove', function(event) {
-			if (this.dataset.on == 'on') {
-				box.move(this, event);
-			}
-		});
+			//Moving
+			event_bind(queue[i], 'mousemove', function(event) {
+				if (this.dataset.on == 'on') {
+					box.move(this, event);
+				}
+			});
 
-		//Stop moving
-		event_bind(movebar, 'mouseup', function() {
-			this.dataset.on = 'off';
-		});
+			//Stop moving
+			event_bind(queue[i], 'mouseup', function() {
+				this.dataset.on = 'off';
+			});
+		}	
 
 		//Moveout
 		event_bind(movebar, 'mouseout', function() {
