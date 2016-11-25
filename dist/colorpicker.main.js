@@ -143,36 +143,47 @@ var Main = function () {
 			};
 
 			var movebar = s.qs('#js-movebar'),
-			    panel = s.qs('#js-panel');
+			    panel = s.qs('#js-panel'),
+			    control = s.qs('#js-control'),
+			    solid_movebar = s.qs('#js-solid-movebar'),
+			    opacity_movebar = s.qs('#js-opacity-movebar');
 
-			//Start moving 
-			event_bind(movebar, 'mousedown', function (event) {
-				event.preventDefault();
-				this.dataset.on = 'on';
-				box.move(this, event);
-			});
+			var queue = [movebar, solid_movebar, opacity_movebar];
 
-			//Moving
-			event_bind(movebar, 'mousemove', function (event) {
-				if (this.dataset.on == 'on') {
+			for (var i = 0, len = queue.length; i < len; ++i) {
+
+				//Start moving 
+				event_bind(queue[i], 'mousedown', function (event) {
+					event.preventDefault();
+					this.dataset.on = 'on';
 					box.move(this, event);
-				}
-			});
+				});
 
-			//Stop moving
-			event_bind(movebar, 'mouseup', function () {
-				this.dataset.on = 'off';
-			});
+				//Moving
+				event_bind(queue[i], 'mousemove', function (event) {
+					if (this.dataset.on == 'on') {
+						box.move(this, event);
+					}
+				});
+
+				//Stop moving
+				event_bind(queue[i], 'mouseup', function () {
+					this.dataset.on = 'off';
+				});
+			}
 
 			//Moveout
 			event_bind(movebar, 'mouseout', function () {
 				this.dataset.on = 'off';
 			});
 
-			//Panel click to move 
+			//Click to move 
 			event_bind(panel, 'click', function (event) {
 				box.move(this, event);
 			});
+			// event_bind(control, 'click', function(event) {
+			// 	box.move(this, event);
+			// });
 		}
 	}]);
 
@@ -234,7 +245,10 @@ var Box = function () {
 			var s = new Selector();
 
 			var movebar = s.qs('#js-movebar'),
-			    panel = s.qs('#js-panel');
+			    panel = s.qs('#js-panel'),
+			    control = s.qs('#js-control'),
+			    solid_movebar = s.qs('#js-solid-movebar'),
+			    opacity_movebar = s.qs('#js-opacity-movebar');
 
 			var offsetX = panel.offsetLeft,
 			    offsetY = panel.offsetTop,
@@ -242,11 +256,6 @@ var Box = function () {
 			    offsetHeight = target.offsetHeight,
 			    x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 			    y = Math.round(event.pageY - offsetY - offsetHeight / 2);
-
-			// if (target === panel) {
-			// 	x = Math.round(event.pageX - offsetX),
-			// 	y = Math.round(event.pageY - offsetY);
-			// }
 
 			if (x < 0) x = 0;
 			if (y < 0) y = 0;
@@ -266,11 +275,25 @@ var Box = function () {
 					left: x + 'px'
 				});
 			} else {
+
+				offsetX = control.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+
+				x < -8 ? x = -8 : x;
+				x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;
+
 				this.animate(target, {
 					left: x + 'px'
+				}, function () {
+					target.style.top = '-1px';
 				});
 			}
 		}
+
+		/* Convert control */
+
+	}, {
+		key: 'convert_control',
+		value: function convert_control() {}
 	}]);
 
 	return Box;
