@@ -120,12 +120,14 @@ class Main {
 
 		const movebar = s.qs('#js-movebar'),
 				panel = s.qs('#js-panel'),
+				control = s.qs('#js-control'),
 				solid_movebar = s.qs('#js-solid-movebar'),
 				opacity_movebar = s.qs('#js-opacity-movebar');
 		
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
 		for (var i = 0, len = queue.length; i < len; ++i) {
+
 			//Start moving 
 			event_bind(queue[i], 'mousedown', function(event) {
 			    event.preventDefault();
@@ -151,10 +153,13 @@ class Main {
 			this.dataset.on = 'off';
 		});
 
-		//Panel click to move 
+		//Click to move 
 		event_bind(panel, 'click', function(event) {
-			box.move(this, event)
+			box.move(this, event);
 		});
+		// event_bind(control, 'click', function(event) {
+		// 	box.move(this, event);
+		// });
 	}
 }
 
@@ -253,7 +258,10 @@ class Box {
 		const s = new Selector();
 
 		let movebar = s.qs('#js-movebar'),
-			  panel = s.qs('#js-panel');
+			  panel = s.qs('#js-panel'),
+			control = s.qs('#js-control'),
+	  solid_movebar = s.qs('#js-solid-movebar'),
+    opacity_movebar = s.qs('#js-opacity-movebar');
 
 		let offsetX = panel.offsetLeft,
 			offsetY = panel.offsetTop,
@@ -261,11 +269,6 @@ class Box {
 	   offsetHeight = target.offsetHeight,
 				  x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 				  y = Math.round(event.pageY - offsetY - offsetHeight / 2);
-
-		// if (target === panel) {
-		// 	x = Math.round(event.pageX - offsetX),
-		// 	y = Math.round(event.pageY - offsetY);
-		// }
 
 		if( x < 0) x = 0;
 		if( y < 0 ) y = 0;
@@ -286,10 +289,24 @@ class Box {
 				left: x + 'px'
 			});
 		} else {
+
+			offsetX = control.offsetLeft,
+				  x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+			
+			x < -8 ? x = -8 : x;
+			x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;
+
 			this.animate(target, {
 				left: x + 'px'
+			}, function() {
+				target.style.top = '-1px';
 			});
 		}
+	}
+
+	/* Convert control */
+	convert_control() {
+
 	}
 }
 
