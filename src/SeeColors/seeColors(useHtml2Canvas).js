@@ -247,8 +247,9 @@ class SeeColors{
     }
     //退出处理，删除生成的类
     exit(){
-        if(this.$(".seeColors-follow-cooky"))
+        if(this.$(".seeColors-follow-cooky")){
             this.$(".seeColors-follow-cooky").remove();
+        }
         this.$("body").style.overflowY="auto";
         this.$(".seeColors-temp-canvas").remove();
         this.$(".seeColors-temp-container").remove();
