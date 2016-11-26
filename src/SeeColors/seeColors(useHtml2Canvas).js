@@ -13,8 +13,10 @@ class SeeColors{
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
-        if(this.$("body").screenTop!="0")
+        if(this.$("body").scrollTop!="0"){
             this.$("body").style.overflowY="hidden";
+        }
+        this.scroller=this.$("body").scrollTop;
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
@@ -31,7 +33,6 @@ class SeeColors{
                 let canvas=can.canvas,
                     width=canvas.width,
                     height=canvas.height;
-                // console.log(canvas.width);
                 return this.addListener(this.$('.seeColors-temp-container'),(x,y)=>{
                     if(this.$('.seeColors-follow-cooky')==null){
                         this.createFollowCookies();
@@ -41,10 +42,7 @@ class SeeColors{
                         mX=x-left,
                         mY=y-top,
                         pixel=mY*width+mX;
-                    this.setFollowCookies(mX,mY+canvas.offsetTop,can,pixel,width,height).then(function(){
-                        // canvas.addEventListener("mouseout",
-                        //     this.removeFollowCookies.bind(this),false);
-                    }.bind(this));
+                    this.setFollowCookies(x,y+this.$("body").scrollTop,can,pixel,width,height);
                     console.log(mX+","+mY+
                         ",rgba("+
                         can.imgData[(pixel-1)*4]+","+
@@ -95,26 +93,6 @@ class SeeColors{
             mouseY:e.clientY
         };
     }
-    //遍历并复制dom，ele为被拷贝节点，copy为拷贝节点
-    findRom(ele,copy){
-        for(let i=0; i<ele.childNodes.length;i++){
-            copy.appendChild(ele.childNodes[i].cloneNode());
-            this.findRom(ele.childNodes[i],copy.childNodes[i]);
-        }
-    }
-    //遍历并赋值样式，ele为被拷贝样式的节点，copy为拷贝样式的节点
-    setStyle(ele,copy,c){
-        for(let i=0; i<ele.children.length;i++){
-            for(let style in this.getStyle(ele.children[i])){
-                try{
-                    copy.children[i].style[style]=this.getStyle(ele.children[i])[style];
-                }catch (e){
-                    // console.log(e);
-                }
-            }
-            this.setStyle(ele.children[i],copy.children[i]);
-        }
-    }
     //获取ele的样式
     getStyle(ele){
         return window.getComputedStyle? window.getComputedStyle(ele, null):ele.currentStyle;
@@ -125,14 +103,13 @@ class SeeColors{
             let mouseLocation=this.getMouseLocation();
             fn(mouseLocation.mouseX,mouseLocation.mouseY);
         },false);
-        container.addEventListener("mouseover",()=>{
-            let mouseLocation=this.getMouseLocation();
-            this.createFollowCookies();
-            // this.setFollowCookies(mouseLocation.mouseX,mouseLocation.mouseY)
-        },false);
-        container.addEventListener("mouseout",
-            this.removeFollowCookies.bind(this)
-            ,false);
+        // container.addEventListener("mouseover",()=>{
+        //     let mouseLocation=this.getMouseLocation();
+        //     this.createFollowCookies();
+        // },false);
+        // container.addEventListener("mouseout",
+        //     this.removeFollowCookies.bind(this)
+        //     ,false);
         return new Promise((resolve,reject)=>{
             container.addEventListener("click",()=>{
                 let mouseLocation=this.getMouseLocation();
@@ -140,60 +117,16 @@ class SeeColors{
             },false);
         });
     }
-    //渲染dom（复制dom节点及属性），返回一个复制好了的父节点
-    renderDom(){
-        let dom=this.dom;
-        let copy=document.createElement("div");
-        copy.classList.add("seeColors-copy-dom");
-        copy.appendChild(dom.cloneNode());
-        this.findRom(dom,copy.children[0]);
-        for(let style in this.getStyle(dom)){
-            try{
-                copy.children[0].style[style]=this.getStyle(dom)[style];
-            }catch (e){
-                // console.log(e);
-            }
-        }
-        this.setStyle(dom,copy.children[0]);
-        return copy;
-    }
     //根据传入的节点生成图片，返回一个Promise为当图片成功加载后的响应
     createImage(str){
-        // //use image/svg+xml;base64 仅兼容chrome
-        // let height=this.dom.offsetHeight,
-        //     width=this.dom.offsetWidth,
-        //     data= `
-        //     <svg xmlns='http://www.w3.org/2000/svg' width='`+width+`' height='`+height+`' >
-        //         <switch>
-        //             <foreignObject width='100%' height='100%' >
-        //                 <div xmlns='http://www.w3.org/1999/xhtml' >
-        //                     ` + str+ `
-        //                 </div>
-        //             </foreignObject>
-        //         </switch>
-        //     </svg>`;
-        // let b2a=(data)=>{
-        //     return (btoa instanceof Function)?btoa(data):window.btoa(data);
-        // };
-        // let src ='data:image/svg+xml;base64,'+b2a(unescape(encodeURIComponent(data)));
-        // let img=new Image;
-        // img.src=src;
-        // img.crossorigin="anonymous";
-        // return new Promise((resolve,reject)=>{
-        //     img.onload=function () {
-        //         console.log("onload!");
-        //         resolve(this);
-        //     };
-        //     img.onerror=function(){
-        //         reject();
-        //     };
-        // });
         let height=(this.dom.tagName!="BODY")?this.dom.offsetHeight:document.body.clientHeight,
             width=(this.dom.tagName!="BODY")?this.dom.offsetWidth:document.body.clientWidth;
         return new Promise((resolve,reject)=>{
             html2canvas(this.dom,{
                 width:width,
                 height:height,
+                // logging:true,
+                useCORS:true,
                 onrendered:function(canvas){
                     canvas.classList.add("seeColors-temp-canvas");
                     let ctx=canvas.getContext("2d");
@@ -208,23 +141,6 @@ class SeeColors{
         });
 
     }
-    //根据图片创建一个和图片一样大小的canvas，并读取其每一个像素信息，返回该创建的canvas和像素信息
-    // createCanvasContainer(canvas){
-    //     let height=this.dom.offsetHeight,
-    //         width=this.dom.offsetWidth;
-    //         // canvas=document.createElement("canvas");
-    //     canvas.classList.add("seeColors-temp-canvas");
-    //     canvas.width=width;
-    //     canvas.height=height;
-    //     let ctx=canvas.getContext("2d");
-    //     // ctx.drawImage(img,0,0);
-    //     let imgData=ctx.getImageData(0,0,width,height).data;
-    //     return{
-    //         canvas:canvas,
-    //         ctx:ctx,
-    //         imgData:imgData
-    //     }
-    // }
     //创建一个div标签，这个标签覆盖整个body体并为白色半透明，并为canvas设置位置。效果为：截屏时，this.dom以外的其他元素有模糊效果
     createSeeColorContainer(canvas){
         let dom=this.dom,
@@ -255,7 +171,11 @@ class SeeColors{
             canvas.style.top=this.$("body").scrollTop+"px";
             canvas.style.left=0;
         }else {
-            canvas.style.top=top-(-domStyle.marginTop.split("px")[0]-this.$("body").scrollTop)+"px";
+            if(this.scroller=="0"){
+                canvas.style.top=top-(-domStyle.marginTop.split("px")[0]-this.$("body").scrollTop)+"px";
+            }else {
+                canvas.style.top=(this.$("body").scrollTop)+"px";
+            }
             canvas.style.left=left-(-domStyle.marginLeft.split("px")[0])+"px";
         }
         canvas.style.zIndex="1000";
@@ -269,8 +189,6 @@ class SeeColors{
             cooky.classList.add('seeColors-follow-cooky');
             cooky.style.position="absolute";
             cooky.style.border="1px black solid";
-            // cooky.style.borderTop="1px black solid";
-            // cooky.style.borderRadius="50px";
             cooky.style.width="122px";
             cooky.style.height="122px";
             cooky.style.borderRadius="61px";
@@ -307,17 +225,14 @@ class SeeColors{
     }
     //为那个跟随鼠标的div提供位置和选中的颜色
     setFollowCookies(l,t,can,p,w,h){
-        let left=(w-l>110)?l+30:l-110,
-            top=t>20?(h-t>110?t+30:t-110):t+60,
+        let left=(w-l>110)?l:l-110,
+            top=t>20?(h-t>110?t:t-110):t+30,
             canvas=can.canvas,
             pl=p-4*65;
-        // canvas.removeEventListener("mouseout",
-        //     this.removeFollowCookies
-        //     ,false);
         return new Promise((resolve,reject)=>{
             this.$('.seeColors-follow-cooky').style.zIndex="1001";
-            this.$('.seeColors-follow-cooky').style.top=t+"px";
-            this.$('.seeColors-follow-cooky').style.left=l+"px";
+            this.$('.seeColors-follow-cooky').style.top=top+"px";
+            this.$('.seeColors-follow-cooky').style.left=left+"px";
             for(let i=0;i<121;i++){
                 let ci=p-(5*canvas.width+5)+(Number.parseInt(i/11))*canvas.width+i%11,
                     n=i+1;
@@ -332,8 +247,9 @@ class SeeColors{
     }
     //退出处理，删除生成的类
     exit(){
-        if(this.$(".seeColors-follow-cooky"))
+        if(this.$(".seeColors-follow-cooky")){
             this.$(".seeColors-follow-cooky").remove();
+        }
         this.$("body").style.overflowY="auto";
         this.$(".seeColors-temp-canvas").remove();
         this.$(".seeColors-temp-container").remove();
