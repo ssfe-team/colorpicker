@@ -127,10 +127,11 @@ class SeeColors{
                 width:width,
                 height:height,
                 // logging:true,
-                useCORS:true,
+                // useCORS:true,
                 onrendered:function(canvas){
                     canvas.classList.add("seeColors-temp-canvas");
                     let ctx=canvas.getContext("2d");
+                    this.$("body").appendChild(canvas);
                     let imgData=ctx.getImageData(0,0,canvas.width,canvas.height).data;
                     resolve({
                         canvas:canvas,
