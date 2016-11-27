@@ -100,7 +100,15 @@ let setting = {
 };
 
 /* Color value */
-let hsla = {
+let hex = '',
+
+rgba = {
+	r: '',
+	g: '',
+	b: '',
+	a: ''
+},
+hsla = {
 	hue: '0',
 	saturation: '100%',
 	lightness: '50%',
@@ -147,7 +155,8 @@ class Main {
 				    panel = s.qs('#js-panel'),
 				  control = s.qs('#js-control'),
 		    solid_movebar = s.qs('#js-solid-movebar'),
-		  opacity_movebar = s.qs('#js-opacity-movebar');
+		  opacity_movebar = s.qs('#js-opacity-movebar'),
+		      convert_btn = s.qs('#js-convert');
 		
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
@@ -192,7 +201,22 @@ class Main {
 		// event_bind(control, 'click', function(event) {
 		// 	box.move(this, event);
 		// });
-		
+
+		//Convert
+		let cur = 0, next;
+
+		event_bind(convert_btn, 'click', function() {
+
+			if (cur == 2) {
+				next = 0;
+			} else {
+				next = cur + 1;
+			}
+
+			box.show(cur, next);
+
+			cur++;
+		});
 	}
 
 	/* init */
@@ -244,11 +268,11 @@ class Box {
                     </div>
                 </div>
                 <div class="colorpicker-toolbar-input">
-                    <div class="colorpicker-toolbar-input-hex">
+                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">
                         <input type="text">
                         <div class="colorpicker-toolbar-input-text">HEX</div>
                     </div>
-                    <div class="colorpicker-toolbar-input-rgba">
+                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">
                         <div class="colorpicker-toolbar-input-wrap">
                             <input type="text">
                             <div class="colorpicker-toolbar-input-text">R</div>
@@ -266,7 +290,7 @@ class Box {
                             <div class="colorpicker-toolbar-input-text">A</div>
                         </div>
                     </div>
-                    <div class="colorpicker-toolbar-input-hsla">
+                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">
                         <div class="colorpicker-toolbar-input-wrap">
                             <input type="text">
                             <div class="colorpicker-toolbar-input-text">H</div>
@@ -284,7 +308,7 @@ class Box {
                             <div class="colorpicker-toolbar-input-text">A</div>
                         </div>
                     </div>
-                    <div class="flip"></div>
+                    <div class="flip" id="js-convert"></div>
                 </div>
             </div>
         `;
@@ -450,5 +474,16 @@ class Box {
 		watch.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
 	}
 
-	/*  */
+	/* Show */
+	show(cur, next) {
+		const input_hex = s.qs('#js-input-hex'),
+			 input_rgba = s.qs('#js-input-rgba'),
+		     input_hsla = s.qs('#js-input-hsla');
+
+		let queue = [input_hex, input_rgba, input_hsla];
+
+		queue[cur].style.display = 'none';
+
+		queue[next].style.display = 'block';
+	}
 }
