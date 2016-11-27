@@ -331,14 +331,15 @@ var Box = function () {
 	}, {
 		key: 'move',
 		value: function move(target, event) {
-			var movebar = s.qs('#js-movebar'),
+			var colorpicker = s.qs('.colorpicker'),
 			    panel = s.qs('#js-panel'),
+			    movebar = s.qs('#js-movebar'),
 			    control = s.qs('#js-control'),
 			    solid_movebar = s.qs('#js-solid-movebar'),
 			    opacity_movebar = s.qs('#js-opacity-movebar');
 
-			var offsetX = panel.offsetLeft,
-			    offsetY = panel.offsetTop,
+			var offsetX = colorpicker.offsetLeft,
+			    offsetY = colorpicker.offsetTop,
 			    offsetWidth = target.offsetWidth,
 			    offsetHeight = target.offsetHeight,
 			    x = Math.round(event.pageX - offsetX - offsetWidth / 2),
@@ -363,7 +364,7 @@ var Box = function () {
 				});
 			} else {
 
-				offsetX = control.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+				offsetX = control.offsetLeft + colorpicker.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
 
 				x < -8 ? x = -8 : x;
 				x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;

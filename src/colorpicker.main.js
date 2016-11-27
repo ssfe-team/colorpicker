@@ -330,23 +330,24 @@ class Box {
 
 	/* The movebar and control move */
 	move(target, event) {
-		let movebar = s.qs('#js-movebar'),
-			  panel = s.qs('#js-panel'),
-			control = s.qs('#js-control'),
-	  solid_movebar = s.qs('#js-solid-movebar'),
-    opacity_movebar = s.qs('#js-opacity-movebar');
+		let colorpicker = s.qs('.colorpicker'),
+		          panel = s.qs('#js-panel'),
+			    movebar = s.qs('#js-movebar'),
+				control = s.qs('#js-control'),
+		  solid_movebar = s.qs('#js-solid-movebar'),
+		opacity_movebar = s.qs('#js-opacity-movebar');
 
-		let offsetX = panel.offsetLeft,
-			offsetY = panel.offsetTop,
+		let offsetX = colorpicker.offsetLeft,
+			offsetY = colorpicker.offsetTop,
 	    offsetWidth = target.offsetWidth,
 	   offsetHeight = target.offsetHeight,
 				  x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 				  y = Math.round(event.pageY - offsetY - offsetHeight / 2);
 
-		if( x < 0) x = 0;
+		if( x < 0 ) x = 0;
 		if( y < 0 ) y = 0;
-		if( x > panel.clientWidth - offsetWidth) x = panel.clientWidth - offsetWidth;
-		if( y > panel.clientHeight - offsetHeight) y = panel.clientHeight - offsetHeight;
+		if( x > panel.clientWidth - offsetWidth ) x = panel.clientWidth - offsetWidth;
+		if( y > panel.clientHeight - offsetHeight ) y = panel.clientHeight - offsetHeight;
 
 		if (target === movebar) {
 			this.animate(target, {
@@ -356,14 +357,14 @@ class Box {
 		} else if (target === panel) {
 			x = Math.round(event.pageX - offsetX),
 			y = Math.round(event.pageY - offsetY);
-
+	
 			this.animate(movebar, {
 				top: y + 'px',
 				left: x + 'px'
 			});
 		} else {
 
-			offsetX = control.offsetLeft,
+			offsetX = control.offsetLeft + colorpicker.offsetLeft,
 				  x = Math.round(event.pageX - offsetX - offsetWidth / 2);
 			
 			x < -8 ? x = -8 : x;
