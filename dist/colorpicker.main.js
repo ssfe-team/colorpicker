@@ -179,6 +179,9 @@ var Main = function () {
 			//Trigger box 
 			event_bind(trigger, 'click', box.appear);
 
+			//Hide Box 
+			event_bind(window, 'keydown', box.hide);
+
 			for (var i = 0, len = queue.length; i < len; ++i) {
 
 				//Start moving 
@@ -273,17 +276,43 @@ var Box = function () {
 		value: function appendTpl() {
 			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex">\n                        <input type="text">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip"></div>\n                </div>\n            </div>\n        ';
 
+			var script = s.qs('script');
+
 			var colorpicker = document.createElement('div');
 
 			colorpicker.classList.add('colorpicker');
+			colorpicker.dataset.appear = 'off';
 			colorpicker.innerHTML = templete;
 
-			document.body.appendChild(colorpicker);
+			document.body.insertBefore(colorpicker, script);
 		}
 	}, {
 		key: 'appear',
 		value: function appear() {
 			var colorpicker = s.qs('.colorpicker');
+
+			if (colorpicker.dataset.appear == 'off') {
+				colorpicker.style.display = 'block';
+				colorpicker.style.left = setting.posX;
+				colorpicker.style.top = setting.posY;
+
+				colorpicker.dataset.appear = 'on';
+			} else {
+				colorpicker.style.display = 'none';
+
+				colorpicker.dataset.appear = 'off';
+			}
+		}
+	}, {
+		key: 'hide',
+		value: function hide(event) {
+			var colorpicker = s.qs('.colorpicker');
+
+			if (event && event.keyCode == 27) {
+				colorpicker.style.display = 'none';
+
+				colorpicker.dataset.appear = 'off';
+			}
 
 			colorpicker.style.display = 'block';
 		}

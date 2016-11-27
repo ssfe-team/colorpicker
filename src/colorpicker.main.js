@@ -128,7 +128,7 @@ class Main {
 		const event_bind = function(target, type, handler) {
 			target.addEventListener(type, handler);
 		};
-		
+
 		//Append templete
 		box.appendTpl();
 
@@ -145,6 +145,9 @@ class Main {
 
 		//Trigger box 
 		event_bind(trigger, 'click', box.appear);
+
+		//Hide Box 
+		event_bind(window, 'keydown', box.hide);
 
 		for (var i = 0, len = queue.length; i < len; ++i) {
 
@@ -277,17 +280,41 @@ class Box {
             </div>
         `;
 
+       const script = s.qs('script');
+
        let colorpicker = document.createElement('div');
 
        colorpicker.classList.add('colorpicker');
+       colorpicker.dataset.appear = 'off';
        colorpicker.innerHTML = templete;
 
-       document.body.appendChild(colorpicker);
-
+       document.body.insertBefore(colorpicker, script);
 	}
 
 	appear() {
 		const colorpicker = s.qs('.colorpicker');
+
+		if (colorpicker.dataset.appear == 'off') {
+			colorpicker.style.display = 'block';
+			colorpicker.style.left = setting.posX;
+			colorpicker.style.top = setting.posY;
+
+			colorpicker.dataset.appear = 'on';
+		} else {
+			colorpicker.style.display = 'none';
+
+			colorpicker.dataset.appear = 'off';
+		}
+	}
+
+	hide(event) {
+		const colorpicker = s.qs('.colorpicker');
+
+		if (event && event.keyCode == 27) {
+			colorpicker.style.display = 'none';
+
+			colorpicker.dataset.appear = 'off';
+		}
 
 		colorpicker.style.display = 'block';
 	}
