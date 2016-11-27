@@ -232,12 +232,12 @@ class Box {
             <div class="colorpicker-toolbar">
                 <div class="colorpicker-toolbar-tool">
                     <div class="colorpicker-screen"></div>
-                    <div class="colorpicker-watch"></div>
+                    <div class="colorpicker-watch" id="js-watch"></div>
                     <div class="colorpicker-control" id="js-control">
                         <div class="colorpicker-control-solid">
                             <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>
                         </div>
-                        <div class="colorpicker-control-opacity">
+                        <div class="colorpicker-control-opacity" id="js-opacity-control">
                             <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>
                             <div class="colorpicker-control-opacity-mask"></div>
                         </div>
@@ -391,25 +391,38 @@ class Box {
 
 				hsla.hue = hue;
 
+				this.update_panel(hue);
+				this.update_watch(hsla);
+
 			} else {
 				
 				let alpha = Math.round((x + 8) / control.clientWidth * 100) / 100;
 
 				hsla.alpha = alpha;
 
-				console.log(alpha);
+				this.update_watch(hsla);
 			}
-
-			this.update_panel(hsla);
 		}
 	}
 
 	/* Update panel */
-	update_panel(para) {
-		const panel = s.qs('#js-panel');
+	update_panel(hue) {
+		const panel = s.qs('#js-panel'),
+			  opacity_control = s.qs('#js-opacity-control');
+
+		panel.style.background = 'hsla(' + hue + ', 100%, 50%, 1)';
+		opacity_control.style.background = 'hsla(' + hue + ', 100%, 50%, 1)';
+
+	}
+
+	/* Update watch */
+	update_watch(para) {
+		const watch = s.qs('#js-watch');
 
 		let {hue, saturation, lightness, alpha} = para;
 
-		panel.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
+		watch.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
 	}
+
+	/*  */
 }
