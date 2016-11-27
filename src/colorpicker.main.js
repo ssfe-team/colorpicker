@@ -93,6 +93,12 @@ const converts = {
 	}
 };
 
+/* Setting */
+const setting = {
+	posX: '',
+	posY: ''
+};
+
 /* Selector */
 class Selector {
 	qs(selector) {
@@ -103,29 +109,48 @@ class Selector {
 	}
 }
 
+const s = new Selector();
+
 class Main {
-	
-	constructor() {
-		this.event_handler();
+
+	/* Setting by user */
+	set(para) {
+		let {posX = '0px', posY = '0px'} = para;
+
+		setting.posX = posX;
+		setting.posY = posY;
 	}
 
 	/* Event handler */
 	event_handler() {
-		const box = new Box(),
-			    s = new Selector();
+		const box = new Box();
 
 		const event_bind = function(target, type, handler) {
 			target.addEventListener(type, handler);
-		}
+		};
 
-		const movebar = s.qs('#js-movebar'),
-				panel = s.qs('#js-panel'),
-				solid_movebar = s.qs('#js-solid-movebar'),
-				opacity_movebar = s.qs('#js-opacity-movebar');
+		//Append templete
+		box.appendTpl();
+
+		const trigger = s.qs('#js-colorpicker-trigger'); 
+
+		const colorpicker = s.qs('.colorpicker'),
+			      movebar = s.qs('#js-movebar'),
+				    panel = s.qs('#js-panel'),
+				  control = s.qs('#js-control'),
+		    solid_movebar = s.qs('#js-solid-movebar'),
+		  opacity_movebar = s.qs('#js-opacity-movebar');
 		
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
+		//Trigger box 
+		event_bind(trigger, 'click', box.appear);
+
+		//Hide Box 
+		event_bind(window, 'keydown', box.hide);
+
 		for (var i = 0, len = queue.length; i < len; ++i) {
+
 			//Start moving 
 			event_bind(queue[i], 'mousedown', function(event) {
 			    event.preventDefault();
@@ -151,10 +176,19 @@ class Main {
 			this.dataset.on = 'off';
 		});
 
-		//Panel click to move 
+		//Click to move 
 		event_bind(panel, 'click', function(event) {
-			box.move(this, event)
+			box.move(this, event);
 		});
+		// event_bind(control, 'click', function(event) {
+		// 	box.move(this, event);
+		// });
+		
+	}
+
+	/* init */
+	init() {
+		this.event_handler();
 	}
 }
 
@@ -179,81 +213,118 @@ class Box {
 		cb();
 	}
 
-	/* Appear */
-	appear(trigger) {
+	/* Append templete */
+	appendTpl() {
 		const templete = `
-			<div class="colorpicker">
-			    <div class="colorpicker-panel">
-			        <div class="colorpicker-panel-mask"></div>
-			        <div class="colorpicker-panel-movebar" id="js-movebar"></div>
-			    </div>
-			    <div class="colorpicker-toolbar">
-			        <div class="colorpicker-toolbar-tool">
-			            <div class="colorpicker-screen"></div>
-			            <div class="colorpicker-watch"></div>
-			            <div class="colorpicker-control">
-			                <div class="colorpicker-control-solid">
-			                  <input type="range" name="" value="10" min="1" max="10">
-			                </div>
-			                <div class="colorpicker-control-opacity">
-			                  <input type="range" name="" value="10" min="1" max="10" step="1">
-			                </div>
-			            </div>
-			        </div>
-			        <div class="colorpicker-toolbar-input">
-			            <div class="colorpicker-toolbar-input-hex">
-			                <input type="text">
-			                <div class="colorpicker-toolbar-input-text">HEX</div>
-			            </div>
-			            <div class="colorpicker-toolbar-input-rgba">
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">R</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">G</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">B</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">A</div>
-			                </div>
-			            </div>
-			            <div class="colorpicker-toolbar-input-hsla">
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">H</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">S</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">L</div>
-			                </div>
-			                <div class="colorpicker-toolbar-input-wrap">
-			                    <input type="text">
-			                    <div class="colorpicker-toolbar-input-text">A</div>
-			                </div>
-			            </div>
-			            <div class="flip"></div>
-			        </div>
-			    </div>
-			</div>
-		`;
+            <div class="colorpicker-panel" id="js-panel" >
+                <div class="colorpicker-panel-mask"></div>
+                <div class="colorpicker-panel-movebar" id="js-movebar"></div>
+            </div>
+            <div class="colorpicker-toolbar">
+                <div class="colorpicker-toolbar-tool">
+                    <div class="colorpicker-screen"></div>
+                    <div class="colorpicker-watch"></div>
+                    <div class="colorpicker-control" id="js-control">
+                        <div class="colorpicker-control-solid">
+                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>
+                        </div>
+                        <div class="colorpicker-control-opacity">
+                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>
+                            <div class="colorpicker-control-opacity-mask"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="colorpicker-toolbar-input">
+                    <div class="colorpicker-toolbar-input-hex">
+                        <input type="text">
+                        <div class="colorpicker-toolbar-input-text">HEX</div>
+                    </div>
+                    <div class="colorpicker-toolbar-input-rgba">
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">R</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">G</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">B</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">A</div>
+                        </div>
+                    </div>
+                    <div class="colorpicker-toolbar-input-hsla">
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">H</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">S</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">L</div>
+                        </div>
+                        <div class="colorpicker-toolbar-input-wrap">
+                            <input type="text">
+                            <div class="colorpicker-toolbar-input-text">A</div>
+                        </div>
+                    </div>
+                    <div class="flip"></div>
+                </div>
+            </div>
+        `;
+
+       const script = s.qs('script');
+
+       let colorpicker = document.createElement('div');
+
+       colorpicker.classList.add('colorpicker');
+       colorpicker.dataset.appear = 'off';
+       colorpicker.innerHTML = templete;
+
+       document.body.insertBefore(colorpicker, script);
+
+	}
+
+	appear() {
+		const colorpicker = s.qs('.colorpicker');
+
+		if (colorpicker.dataset.appear == 'off') {
+			colorpicker.style.display = 'block';
+			colorpicker.style.left = setting.posX;
+			colorpicker.style.top = setting.posY;
+
+			colorpicker.dataset.appear = 'on';
+		} else {
+			colorpicker.style.display = 'none';
+
+			colorpicker.dataset.appear = 'off';
+		}
+	}
+
+	hide(event) {
+		const colorpicker = s.qs('.colorpicker');
+
+		if (event && event.keyCode == 27) {
+			colorpicker.style.display = 'none';
+
+			colorpicker.dataset.appear = 'off';
+		}
 	}
 
 	/* The movebar and control move */
 	move(target, event) {
-		const s = new Selector();
-
 		let movebar = s.qs('#js-movebar'),
-			  panel = s.qs('#js-panel');
+			  panel = s.qs('#js-panel'),
+			control = s.qs('#js-control'),
+	  solid_movebar = s.qs('#js-solid-movebar'),
+    opacity_movebar = s.qs('#js-opacity-movebar');
 
 		let offsetX = panel.offsetLeft,
 			offsetY = panel.offsetTop,
@@ -261,11 +332,6 @@ class Box {
 	   offsetHeight = target.offsetHeight,
 				  x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 				  y = Math.round(event.pageY - offsetY - offsetHeight / 2);
-
-		// if (target === panel) {
-		// 	x = Math.round(event.pageX - offsetX),
-		// 	y = Math.round(event.pageY - offsetY);
-		// }
 
 		if( x < 0) x = 0;
 		if( y < 0 ) y = 0;
@@ -286,11 +352,23 @@ class Box {
 				left: x + 'px'
 			});
 		} else {
+
+			offsetX = control.offsetLeft,
+				  x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+			
+			x < -8 ? x = -8 : x;
+			x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;
+
 			this.animate(target, {
 				left: x + 'px'
+			}, function() {
+				target.style.top = '-1px';
 			});
 		}
 	}
-}
 
-new Main();
+	/* Convert control */
+	convert_control() {
+
+	}
+}

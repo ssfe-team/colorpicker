@@ -100,6 +100,12 @@ var converts = (_converts = {
 	};
 }), _converts);
 
+/* Setting */
+var setting = {
+	posX: '',
+	posY: ''
+};
+
 /* Selector */
 
 var Selector = function () {
@@ -122,57 +128,102 @@ var Selector = function () {
 	return Selector;
 }();
 
+var s = new Selector();
+
 var Main = function () {
 	function Main() {
 		_classCallCheck(this, Main);
-
-		this.event_handler();
 	}
 
-	/* Event handler */
-
-
 	_createClass(Main, [{
+		key: 'set',
+
+
+		/* Setting by user */
+		value: function set(para) {
+			var _para$posX = para.posX,
+			    posX = _para$posX === undefined ? '0px' : _para$posX,
+			    _para$posY = para.posY,
+			    posY = _para$posY === undefined ? '0px' : _para$posY;
+
+
+			setting.posX = posX;
+			setting.posY = posY;
+		}
+
+		/* Event handler */
+
+	}, {
 		key: 'event_handler',
 		value: function event_handler() {
-			var box = new Box(),
-			    s = new Selector();
+			var box = new Box();
 
 			var event_bind = function event_bind(target, type, handler) {
 				target.addEventListener(type, handler);
 			};
 
-			var movebar = s.qs('#js-movebar'),
-			    panel = s.qs('#js-panel');
+			//Append templete
+			box.appendTpl();
 
-			//Start moving 
-			event_bind(movebar, 'mousedown', function (event) {
-				event.preventDefault();
-				this.dataset.on = 'on';
-				box.move(this, event);
-			});
+			var trigger = s.qs('#js-colorpicker-trigger');
 
-			//Moving
-			event_bind(movebar, 'mousemove', function (event) {
-				if (this.dataset.on == 'on') {
+			var colorpicker = s.qs('.colorpicker'),
+			    movebar = s.qs('#js-movebar'),
+			    panel = s.qs('#js-panel'),
+			    control = s.qs('#js-control'),
+			    solid_movebar = s.qs('#js-solid-movebar'),
+			    opacity_movebar = s.qs('#js-opacity-movebar');
+
+			var queue = [movebar, solid_movebar, opacity_movebar];
+
+			//Trigger box 
+			event_bind(trigger, 'click', box.appear);
+
+			//Hide Box 
+			event_bind(window, 'keydown', box.hide);
+
+			for (var i = 0, len = queue.length; i < len; ++i) {
+
+				//Start moving 
+				event_bind(queue[i], 'mousedown', function (event) {
+					event.preventDefault();
+					this.dataset.on = 'on';
 					box.move(this, event);
-				}
-			});
+				});
 
-			//Stop moving
-			event_bind(movebar, 'mouseup', function () {
-				this.dataset.on = 'off';
-			});
+				//Moving
+				event_bind(queue[i], 'mousemove', function (event) {
+					if (this.dataset.on == 'on') {
+						box.move(this, event);
+					}
+				});
+
+				//Stop moving
+				event_bind(queue[i], 'mouseup', function () {
+					this.dataset.on = 'off';
+				});
+			}
 
 			//Moveout
 			event_bind(movebar, 'mouseout', function () {
 				this.dataset.on = 'off';
 			});
 
-			//Panel click to move 
+			//Click to move 
 			event_bind(panel, 'click', function (event) {
 				box.move(this, event);
 			});
+			// event_bind(control, 'click', function(event) {
+			// 	box.move(this, event);
+			// });
+		}
+
+		/* init */
+
+	}, {
+		key: 'init',
+		value: function init() {
+			this.event_handler();
 		}
 	}]);
 
@@ -218,12 +269,50 @@ var Box = function () {
 			cb();
 		}
 
-		/* Appear */
+		/* Append templete */
 
 	}, {
+		key: 'appendTpl',
+		value: function appendTpl() {
+			var templete = '\n            <div class="colorpicker-panel" id="js-panel" >\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex">\n                        <input type="text">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip"></div>\n                </div>\n            </div>\n        ';
+
+			var script = s.qs('script');
+
+			var colorpicker = document.createElement('div');
+
+			colorpicker.classList.add('colorpicker');
+			colorpicker.dataset.appear = 'off';
+			colorpicker.innerHTML = templete;
+
+			document.body.insertBefore(colorpicker, script);
+		}
+	}, {
 		key: 'appear',
-		value: function appear(trigger) {
-			var templete = '\n\t\t\t<div class="colorpicker">\n\t\t\t    <div class="colorpicker-panel">\n\t\t\t        <div class="colorpicker-panel-mask"></div>\n\t\t\t        <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n\t\t\t    </div>\n\t\t\t    <div class="colorpicker-toolbar">\n\t\t\t        <div class="colorpicker-toolbar-tool">\n\t\t\t            <div class="colorpicker-screen"></div>\n\t\t\t            <div class="colorpicker-watch"></div>\n\t\t\t            <div class="colorpicker-control">\n\t\t\t                <div class="colorpicker-control-solid">\n\t\t\t                  <input type="range" name="" value="10" min="1" max="10">\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-control-opacity">\n\t\t\t                  <input type="range" name="" value="10" min="1" max="10" step="1">\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t        </div>\n\t\t\t        <div class="colorpicker-toolbar-input">\n\t\t\t            <div class="colorpicker-toolbar-input-hex">\n\t\t\t                <input type="text">\n\t\t\t                <div class="colorpicker-toolbar-input-text">HEX</div>\n\t\t\t            </div>\n\t\t\t            <div class="colorpicker-toolbar-input-rgba">\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">R</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">G</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">B</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">A</div>\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t            <div class="colorpicker-toolbar-input-hsla">\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">H</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">S</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">L</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">A</div>\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t            <div class="flip"></div>\n\t\t\t        </div>\n\t\t\t    </div>\n\t\t\t</div>\n\t\t';
+		value: function appear() {
+			var colorpicker = s.qs('.colorpicker');
+
+			if (colorpicker.dataset.appear == 'off') {
+				colorpicker.style.display = 'block';
+				colorpicker.style.left = setting.posX;
+				colorpicker.style.top = setting.posY;
+
+				colorpicker.dataset.appear = 'on';
+			} else {
+				colorpicker.style.display = 'none';
+
+				colorpicker.dataset.appear = 'off';
+			}
+		}
+	}, {
+		key: 'hide',
+		value: function hide(event) {
+			var colorpicker = s.qs('.colorpicker');
+
+			if (event && event.keyCode == 27) {
+				colorpicker.style.display = 'none';
+
+				colorpicker.dataset.appear = 'off';
+			}
 		}
 
 		/* The movebar and control move */
@@ -231,10 +320,11 @@ var Box = function () {
 	}, {
 		key: 'move',
 		value: function move(target, event) {
-			var s = new Selector();
-
 			var movebar = s.qs('#js-movebar'),
-			    panel = s.qs('#js-panel');
+			    panel = s.qs('#js-panel'),
+			    control = s.qs('#js-control'),
+			    solid_movebar = s.qs('#js-solid-movebar'),
+			    opacity_movebar = s.qs('#js-opacity-movebar');
 
 			var offsetX = panel.offsetLeft,
 			    offsetY = panel.offsetTop,
@@ -242,11 +332,6 @@ var Box = function () {
 			    offsetHeight = target.offsetHeight,
 			    x = Math.round(event.pageX - offsetX - offsetWidth / 2),
 			    y = Math.round(event.pageY - offsetY - offsetHeight / 2);
-
-			// if (target === panel) {
-			// 	x = Math.round(event.pageX - offsetX),
-			// 	y = Math.round(event.pageY - offsetY);
-			// }
 
 			if (x < 0) x = 0;
 			if (y < 0) y = 0;
@@ -266,14 +351,26 @@ var Box = function () {
 					left: x + 'px'
 				});
 			} else {
+
+				offsetX = control.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+
+				x < -8 ? x = -8 : x;
+				x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;
+
 				this.animate(target, {
 					left: x + 'px'
+				}, function () {
+					target.style.top = '-1px';
 				});
 			}
 		}
+
+		/* Convert control */
+
+	}, {
+		key: 'convert_control',
+		value: function convert_control() {}
 	}]);
 
 	return Box;
 }();
-
-new Main();
