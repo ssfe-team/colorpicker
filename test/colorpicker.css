@@ -19,6 +19,7 @@
 	height: 140px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
+	background: hsla(0, 100%, 50%, 1);
 	overflow: hidden;
 }
 .colorpicker-panel-mask {
@@ -67,7 +68,7 @@
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
-	background-color: blue;
+	background: hsla(0, 100%, 50%, 1);
 }
 .colorpicker-control {
 	margin-left: 10px;
@@ -86,6 +87,7 @@
 .colorpicker-control-opacity {
 	margin-top: 5px;
 	border-radius: 3px;
+	background: hsla(0, 100%, 50%, 1);
 }
 .colorpicker-control-opacity-mask {
 	width: 100%;
