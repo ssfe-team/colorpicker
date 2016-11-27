@@ -363,6 +363,7 @@ var Box = function () {
 					top: y + 'px',
 					left: x + 'px'
 				});
+				this.move_picker(x, y);
 			} else if (target === panel) {
 				x = Math.round(event.pageX - offsetX), y = Math.round(event.pageY - offsetY);
 
@@ -370,6 +371,7 @@ var Box = function () {
 					top: y + 'px',
 					left: x + 'px'
 				});
+				this.move_picker(x, y);
 			} else {
 				offsetX = control.offsetLeft + colorpicker.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
 
@@ -401,6 +403,33 @@ var Box = function () {
 					this.update_watch(hsla);
 				}
 			}
+		}
+
+		/* Move picker */
+
+	}, {
+		key: 'move_picker',
+		value: function move_picker(x, y) {
+			var panel = s.qs('#js-panel'),
+			    watch = s.qs('#js-watch'),
+			    opacity_control = s.qs('#js-opacity-control');
+
+			var saturation = Math.round(x / panel.clientWidth * 100),
+			    lightness = Math.round((1 - y / panel.clientHeight) * 50);
+
+			hsla.saturation = saturation + '%';
+			hsla.lightness = lightness + '%';
+
+			var queue = [watch, opacity_control];
+
+			for (var i = 0, len = queue.length; i < len; ++i) {
+				queue[i].style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ', ' + hsla.alpha + ')';
+			}
+
+			console.log('hue:' + hsla.hue);
+			console.log('saturation:' + hsla.saturation);
+			console.log('lightness: ' + hsla.lightness);
+			console.log('alpha: ' + hsla.alpha);
 		}
 
 		/* Update panel */
