@@ -216,7 +216,7 @@ class Box {
 	/* Append templete */
 	appendTpl() {
 		const templete = `
-            <div class="colorpicker-panel" id="js-panel" >
+            <div class="colorpicker-panel" id="js-panel">
                 <div class="colorpicker-panel-mask"></div>
                 <div class="colorpicker-panel-movebar" id="js-movebar"></div>
             </div>
@@ -289,7 +289,6 @@ class Box {
        colorpicker.innerHTML = templete;
 
        document.body.insertBefore(colorpicker, script);
-
 	}
 
 	appear() {
@@ -316,6 +315,8 @@ class Box {
 
 			colorpicker.dataset.appear = 'off';
 		}
+
+		colorpicker.style.display = 'block';
 	}
 
 	/* The movebar and control move */
