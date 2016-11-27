@@ -133,10 +133,10 @@
 	display: none;
 }
 .colorpicker-toolbar-input-rgba {
-	/*display: none;*/
+	display: none;
 }
 .colorpicker-toolbar-input-hsla {
-	display: none;
+	/*display: none;*/
 }
 .colorpicker-toolbar-input-hex input {
 	width: 100%;	

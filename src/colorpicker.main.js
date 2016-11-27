@@ -94,9 +94,17 @@ const converts = {
 };
 
 /* Setting */
-const setting = {
+let setting = {
 	posX: '',
 	posY: ''
+};
+
+/* Color value */
+let hsla = {
+	hue: '0',
+	saturation: '100%',
+	lightness: '50%',
+	alpha: '1'
 };
 
 /* Selector */
@@ -363,7 +371,6 @@ class Box {
 				left: x + 'px'
 			});
 		} else {
-
 			offsetX = control.offsetLeft + colorpicker.offsetLeft,
 				  x = Math.round(event.pageX - offsetX - offsetWidth / 2);
 			
@@ -375,11 +382,34 @@ class Box {
 			}, function() {
 				target.style.top = '-1px';
 			});
+
+			if (target === solid_movebar) {
+
+				let hue = Math.round((1 - (x + 8) / control.clientWidth) * 360);
+
+				hue == 360 ? hue = 0 : hue ;
+
+				hsla.hue = hue;
+
+			} else {
+				
+				let alpha = Math.round((x + 8) / control.clientWidth * 100) / 100;
+
+				hsla.alpha = alpha;
+
+				console.log(alpha);
+			}
+
+			this.update_panel(hsla);
 		}
 	}
 
-	/* Convert control */
-	convert_control() {
+	/* Update panel */
+	update_panel(para) {
+		const panel = s.qs('#js-panel');
 
+		let {hue, saturation, lightness, alpha} = para;
+
+		panel.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
 	}
 }
