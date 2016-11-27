@@ -213,6 +213,7 @@ var Main = function () {
 			event_bind(panel, 'click', function (event) {
 				box.move(this, event);
 			});
+
 			// event_bind(control, 'click', function(event) {
 			// 	box.move(this, event);
 			// });
@@ -296,11 +297,17 @@ var Box = function () {
 				colorpicker.style.left = setting.posX;
 				colorpicker.style.top = setting.posY;
 
+				colorpicker.classList.add('fade-in');
+				colorpicker.classList.remove('fade-out');
 				colorpicker.dataset.appear = 'on';
 			} else {
-				colorpicker.style.display = 'none';
-
+				colorpicker.classList.add('fade-out');
+				colorpicker.classList.remove('fade-in');
 				colorpicker.dataset.appear = 'off';
+
+				setTimeout(function () {
+					colorpicker.style.display = 'none';
+				}, 400);
 			}
 		}
 	}, {
@@ -309,12 +316,14 @@ var Box = function () {
 			var colorpicker = s.qs('.colorpicker');
 
 			if (event && event.keyCode == 27) {
-				colorpicker.style.display = 'none';
-
+				colorpicker.classList.add('fade-out');
+				colorpicker.classList.remove('fade-in');
 				colorpicker.dataset.appear = 'off';
-			}
 
-			colorpicker.style.display = 'block';
+				setTimeout(function () {
+					colorpicker.style.display = 'none';
+				}, 400);
+			}
 		}
 
 		/* The movebar and control move */
