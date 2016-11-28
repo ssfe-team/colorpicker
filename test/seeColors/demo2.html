@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="./../colorpicker.css">
 </head>
 <body>
-<div class="colorpicker" style="background-image: url('20.jpg');z-index: 10 !important;">
+<div class="colorpicker" style="background-image: url('20.jpg');z-index: 10 !important;display: block">
     <div class="colorpicker-panel" id="js-panel">
         <div class="colorpicker-panel-mask"></div>
         <div class="colorpicker-panel-movebar" id="js-movebar"></div>
@@ -78,18 +78,6 @@
         new SeeColors("body").then((obj)=>{
             console.log(obj);
         });
-//        let
-//            img1=new Image,
-//            canvas=document.createElement("canvas"),
-//            ctx=canvas.getContext("2d");
-//        img1.crossOrigin="*";
-//        img1.src="http://photo.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0c/ac/pm_140738.jpg@596w_1l.jpg";
-//        img1.onload=function () {
-//            ctx.drawImage(img1,0,0);
-//            console.log(ctx.getImageData(0,0,10,10).data);
-//        };
-//        console.log(canvas);
-//        document.querySelector("body").appendChild(canvas);
     }
 
 </script>
