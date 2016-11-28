@@ -1,10 +1,7 @@
 /**
- *
- * Created by suti on 2016/11/21.
- */
-/**
  * seeColors
- * Created by suti on 2016/11/14.
+ * Created by suti on 2016/11/21.
+ *
  *   new SeeColors("#item").then(it=>{...});  "..."为取完颜色后的操作，it为渠道的像素颜色
  */
 "use strict";
