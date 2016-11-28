@@ -1,11 +1,8 @@
 /*
  * colorpicker.css
  */
-* {
-	margin: 0;
-	padding: 0;
-}
 .colorpicker {
+	display: none;
 	position: absolute;
 	width: 220px;
 	height: 280px;
@@ -22,6 +19,7 @@
 	height: 140px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
+	background: hsla(0, 100%, 50%, 1);
 	overflow: hidden;
 }
 .colorpicker-panel-mask {
@@ -70,7 +68,7 @@
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
-	background-color: blue;
+	background: hsla(0, 100%, 50%, 1);
 }
 .colorpicker-control {
 	margin-left: 10px;
@@ -89,6 +87,7 @@
 .colorpicker-control-opacity {
 	margin-top: 5px;
 	border-radius: 3px;
+	background: hsla(0, 100%, 50%, 1);
 }
 .colorpicker-control-opacity-mask {
 	width: 100%;
@@ -133,10 +132,10 @@
 	text-align: center;
 }
 .colorpicker-toolbar-input-hex {
-	display: none;
+	/*display: none;*/
 }
 .colorpicker-toolbar-input-rgba {
-	/*display: none;*/
+	display: none;
 }
 .colorpicker-toolbar-input-hsla {
 	display: none;
@@ -168,6 +167,14 @@
 }
 
 /* Animation */
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0
+	},
+	100% {
+		opacity: 1
+	}
+}
 @keyframes fadeIn {
 	0% {
 		opacity: 0
@@ -176,17 +183,21 @@
 		opacity: 1
 	}
 }
-@keyframes fadeOut {
-	0% {
-		opacity: 1
-	},
+@-webkit-keyframes fadeOut {
 	100% {
 		opacity: 0
 	}
 }
-.fadeIn {
-	animation: fadeIn .5s;
+@keyframes fadeOut {
+	100% {
+		opacity: 0
+	}
 }
-.fadeOut {
-	animation: fadeOut .5s;
+.fade-in {
+	-webkit-animation: fadeIn .5s;
+			animation: fadeIn .5s;
+}
+.fade-out {
+	-webkit-animation: fadeOut .5s;
+	  	    animation: fadeOut .5s;
 }

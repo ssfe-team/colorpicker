@@ -100,6 +100,27 @@ var converts = (_converts = {
 	};
 }), _converts);
 
+/* Setting */
+var setting = {
+	posX: '',
+	posY: ''
+};
+
+/* Color value */
+var hex = '',
+    rgba = {
+	r: '',
+	g: '',
+	b: '',
+	a: ''
+},
+    hsla = {
+	hue: '0',
+	saturation: '100%',
+	lightness: '50%',
+	alpha: '1'
+};
+
 /* Selector */
 
 var Selector = function () {
@@ -122,33 +143,60 @@ var Selector = function () {
 	return Selector;
 }();
 
+var s = new Selector();
+
 var Main = function () {
 	function Main() {
 		_classCallCheck(this, Main);
-
-		this.event_handler();
 	}
 
-	/* Event handler */
-
-
 	_createClass(Main, [{
+		key: 'set',
+
+
+		/* Setting by user */
+		value: function set(para) {
+			var _para$posX = para.posX,
+			    posX = _para$posX === undefined ? '0px' : _para$posX,
+			    _para$posY = para.posY,
+			    posY = _para$posY === undefined ? '0px' : _para$posY;
+
+
+			setting.posX = posX;
+			setting.posY = posY;
+		}
+
+		/* Event handler */
+
+	}, {
 		key: 'event_handler',
 		value: function event_handler() {
-			var box = new Box(),
-			    s = new Selector();
+			var box = new Box();
 
 			var event_bind = function event_bind(target, type, handler) {
 				target.addEventListener(type, handler);
 			};
 
-			var movebar = s.qs('#js-movebar'),
+			//Append templete
+			box.appendTpl();
+
+			var trigger = s.qs('#js-colorpicker-trigger');
+
+			var colorpicker = s.qs('.colorpicker'),
+			    movebar = s.qs('#js-movebar'),
 			    panel = s.qs('#js-panel'),
 			    control = s.qs('#js-control'),
 			    solid_movebar = s.qs('#js-solid-movebar'),
-			    opacity_movebar = s.qs('#js-opacity-movebar');
+			    opacity_movebar = s.qs('#js-opacity-movebar'),
+			    convert_btn = s.qs('#js-convert');
 
 			var queue = [movebar, solid_movebar, opacity_movebar];
+
+			//Trigger box 
+			event_bind(trigger, 'click', box.appear);
+
+			//Hide Box 
+			event_bind(window, 'keydown', box.hide);
 
 			for (var i = 0, len = queue.length; i < len; ++i) {
 
@@ -181,9 +229,37 @@ var Main = function () {
 			event_bind(panel, 'click', function (event) {
 				box.move(this, event);
 			});
+
 			// event_bind(control, 'click', function(event) {
 			// 	box.move(this, event);
 			// });
+
+			//Convert
+			var cur = 0,
+			    next = void 0;
+
+			event_bind(convert_btn, 'click', function () {
+
+				// if (cur == 2) {
+				// 	next = 0;
+				// } else {
+				// 	next = cur + 1;
+				// }
+				cur == 2 ? next = 0 : next = cur + 1;
+
+				box.show(cur, next);
+
+				cur == 2 ? cur = -1 : cur;
+				cur++;
+			});
+		}
+
+		/* init */
+
+	}, {
+		key: 'init',
+		value: function init() {
+			this.event_handler();
 		}
 	}]);
 
@@ -229,12 +305,60 @@ var Box = function () {
 			cb();
 		}
 
-		/* Appear */
+		/* Append templete */
 
 	}, {
+		key: 'appendTpl',
+		value: function appendTpl() {
+			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch" id="js-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity" id="js-opacity-control">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">\n                        <input type="text">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip" id="js-convert"></div>\n                </div>\n            </div>\n        ';
+
+			var script = s.qs('script');
+
+			var colorpicker = document.createElement('div');
+
+			colorpicker.classList.add('colorpicker');
+			colorpicker.dataset.appear = 'off';
+			colorpicker.innerHTML = templete;
+
+			document.body.insertBefore(colorpicker, script);
+		}
+	}, {
 		key: 'appear',
-		value: function appear(trigger) {
-			var templete = '\n\t\t\t<div class="colorpicker">\n\t\t\t    <div class="colorpicker-panel">\n\t\t\t        <div class="colorpicker-panel-mask"></div>\n\t\t\t        <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n\t\t\t    </div>\n\t\t\t    <div class="colorpicker-toolbar">\n\t\t\t        <div class="colorpicker-toolbar-tool">\n\t\t\t            <div class="colorpicker-screen"></div>\n\t\t\t            <div class="colorpicker-watch"></div>\n\t\t\t            <div class="colorpicker-control">\n\t\t\t                <div class="colorpicker-control-solid">\n\t\t\t                  <input type="range" name="" value="10" min="1" max="10">\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-control-opacity">\n\t\t\t                  <input type="range" name="" value="10" min="1" max="10" step="1">\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t        </div>\n\t\t\t        <div class="colorpicker-toolbar-input">\n\t\t\t            <div class="colorpicker-toolbar-input-hex">\n\t\t\t                <input type="text">\n\t\t\t                <div class="colorpicker-toolbar-input-text">HEX</div>\n\t\t\t            </div>\n\t\t\t            <div class="colorpicker-toolbar-input-rgba">\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">R</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">G</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">B</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">A</div>\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t            <div class="colorpicker-toolbar-input-hsla">\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">H</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">S</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">L</div>\n\t\t\t                </div>\n\t\t\t                <div class="colorpicker-toolbar-input-wrap">\n\t\t\t                    <input type="text">\n\t\t\t                    <div class="colorpicker-toolbar-input-text">A</div>\n\t\t\t                </div>\n\t\t\t            </div>\n\t\t\t            <div class="flip"></div>\n\t\t\t        </div>\n\t\t\t    </div>\n\t\t\t</div>\n\t\t';
+		value: function appear() {
+			var colorpicker = s.qs('.colorpicker');
+
+			if (colorpicker.dataset.appear == 'off') {
+				colorpicker.style.display = 'block';
+				colorpicker.style.left = setting.posX;
+				colorpicker.style.top = setting.posY;
+
+				colorpicker.classList.add('fade-in');
+				colorpicker.classList.remove('fade-out');
+				colorpicker.dataset.appear = 'on';
+			} else {
+				colorpicker.classList.add('fade-out');
+				colorpicker.classList.remove('fade-in');
+				colorpicker.dataset.appear = 'off';
+
+				setTimeout(function () {
+					colorpicker.style.display = 'none';
+				}, 400);
+			}
+		}
+	}, {
+		key: 'hide',
+		value: function hide(event) {
+			var colorpicker = s.qs('.colorpicker');
+
+			if (event && event.keyCode == 27) {
+				colorpicker.classList.add('fade-out');
+				colorpicker.classList.remove('fade-in');
+				colorpicker.dataset.appear = 'off';
+
+				setTimeout(function () {
+					colorpicker.style.display = 'none';
+				}, 400);
+			}
 		}
 
 		/* The movebar and control move */
@@ -242,16 +366,15 @@ var Box = function () {
 	}, {
 		key: 'move',
 		value: function move(target, event) {
-			var s = new Selector();
-
-			var movebar = s.qs('#js-movebar'),
+			var colorpicker = s.qs('.colorpicker'),
 			    panel = s.qs('#js-panel'),
+			    movebar = s.qs('#js-movebar'),
 			    control = s.qs('#js-control'),
 			    solid_movebar = s.qs('#js-solid-movebar'),
 			    opacity_movebar = s.qs('#js-opacity-movebar');
 
-			var offsetX = panel.offsetLeft,
-			    offsetY = panel.offsetTop,
+			var offsetX = colorpicker.offsetLeft,
+			    offsetY = colorpicker.offsetTop,
 			    offsetWidth = target.offsetWidth,
 			    offsetHeight = target.offsetHeight,
 			    x = Math.round(event.pageX - offsetX - offsetWidth / 2),
@@ -267,6 +390,7 @@ var Box = function () {
 					top: y + 'px',
 					left: x + 'px'
 				});
+				this.move_picker(x, y);
 			} else if (target === panel) {
 				x = Math.round(event.pageX - offsetX), y = Math.round(event.pageY - offsetY);
 
@@ -274,9 +398,9 @@ var Box = function () {
 					top: y + 'px',
 					left: x + 'px'
 				});
+				this.move_picker(x, y);
 			} else {
-
-				offsetX = control.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
+				offsetX = control.offsetLeft + colorpicker.offsetLeft, x = Math.round(event.pageX - offsetX - offsetWidth / 2);
 
 				x < -8 ? x = -8 : x;
 				x > control.clientWidth - offsetWidth ? x = control.clientWidth - offsetWidth + 8 : x;
@@ -286,17 +410,99 @@ var Box = function () {
 				}, function () {
 					target.style.top = '-1px';
 				});
+
+				if (target === solid_movebar) {
+
+					var hue = Math.round((1 - (x + 8) / control.clientWidth) * 360);
+
+					hue == 360 ? hue = 0 : hue;
+
+					hsla.hue = hue;
+
+					this.update_panel(hue);
+					this.update_watch(hsla);
+				} else {
+
+					var alpha = Math.round((x + 8) / control.clientWidth * 100) / 100;
+
+					hsla.alpha = alpha;
+
+					this.update_watch(hsla);
+				}
 			}
 		}
 
-		/* Convert control */
+		/* Move picker */
 
 	}, {
-		key: 'convert_control',
-		value: function convert_control() {}
+		key: 'move_picker',
+		value: function move_picker(x, y) {
+			var panel = s.qs('#js-panel'),
+			    watch = s.qs('#js-watch'),
+			    opacity_control = s.qs('#js-opacity-control');
+
+			var saturation = Math.round(x / panel.clientWidth * 100),
+			    lightness = Math.round((1 - y / panel.clientHeight) * 50);
+
+			hsla.saturation = saturation + '%';
+			hsla.lightness = lightness + '%';
+
+			var queue = [watch, opacity_control];
+
+			for (var i = 0, len = queue.length; i < len; ++i) {
+				queue[i].style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ', ' + hsla.alpha + ')';
+			}
+
+			console.log('hue:' + hsla.hue);
+			console.log('saturation:' + hsla.saturation);
+			console.log('lightness: ' + hsla.lightness);
+			console.log('alpha: ' + hsla.alpha);
+		}
+
+		/* Update panel */
+
+	}, {
+		key: 'update_panel',
+		value: function update_panel(hue) {
+			var panel = s.qs('#js-panel'),
+			    opacity_control = s.qs('#js-opacity-control');
+
+			panel.style.background = 'hsla(' + hue + ', 100%, 50%, 1)';
+			opacity_control.style.background = 'hsla(' + hue + ', 100%, 50%, 1)';
+		}
+
+		/* Update watch */
+
+	}, {
+		key: 'update_watch',
+		value: function update_watch(para) {
+			var watch = s.qs('#js-watch');
+
+			var hue = para.hue,
+			    saturation = para.saturation,
+			    lightness = para.lightness,
+			    alpha = para.alpha;
+
+
+			watch.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
+		}
+
+		/* Show */
+
+	}, {
+		key: 'show',
+		value: function show(cur, next) {
+			var input_hex = s.qs('#js-input-hex'),
+			    input_rgba = s.qs('#js-input-rgba'),
+			    input_hsla = s.qs('#js-input-hsla');
+
+			var queue = [input_hex, input_rgba, input_hsla];
+
+			queue[cur].style.display = 'none';
+
+			queue[next].style.display = 'block';
+		}
 	}]);
 
 	return Box;
 }();
-
-new Main();

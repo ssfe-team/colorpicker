@@ -4,72 +4,30 @@
         <meta charset="utf-8">
         <title>colorpicker</title>
         <link rel="stylesheet" type="text/css" href="./colorpicker.css">
+        <style type="text/css">
+            .btn {
+                margin: 0 auto;
+                width: 80px;
+                height: 30px;
+                line-height: 30px;
+                border-radius: 3px;
+                text-align: center;
+                background-color: #3BFF2C;
+                color: #fff;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
-        <div class="colorpicker">
-            <div class="colorpicker-panel" id="js-panel">
-                <div class="colorpicker-panel-mask"></div>
-                <div class="colorpicker-panel-movebar" id="js-movebar"></div>
-            </div>
-            <div class="colorpicker-toolbar">
-                <div class="colorpicker-toolbar-tool">
-                    <div class="colorpicker-screen"></div>
-                    <div class="colorpicker-watch"></div>
-                    <div class="colorpicker-control" id="js-control">
-                        <div class="colorpicker-control-solid">
-                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>
-                        </div>
-                        <div class="colorpicker-control-opacity">
-                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>
-                            <div class="colorpicker-control-opacity-mask"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="colorpicker-toolbar-input">
-                    <div class="colorpicker-toolbar-input-hex">
-                        <input type="text">
-                        <div class="colorpicker-toolbar-input-text">HEX</div>
-                    </div>
-                    <div class="colorpicker-toolbar-input-rgba">
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">R</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">G</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">B</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">A</div>
-                        </div>
-                    </div>
-                    <div class="colorpicker-toolbar-input-hsla">
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">H</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">S</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">L</div>
-                        </div>
-                        <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
-                            <div class="colorpicker-toolbar-input-text">A</div>
-                        </div>
-                    </div>
-                    <div class="flip"></div>
-                </div>
-            </div>
-        </div>
+        <div class="btn" id="js-colorpicker-trigger">触发器</div>
         <script type="text/javascript" src="../dist/colorpicker.main.js"></script>
+        <script type="text/javascript">
+            let main = new Main();
+            main.set({
+                posX: '600px',
+                posY: '10px'
+            });
+            main.init();
+        </script>
     </body>
 </html>
