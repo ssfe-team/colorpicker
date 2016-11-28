@@ -1,14 +1,10 @@
 /**
- *
- * Created by suti on 2016/11/21.
- */
-/**
  * seeColors
- * Created by suti on 2016/11/14.
+ * Created by suti on 2016/11/21.
+ *
  *   new SeeColors("#item").then(it=>{...});  "..."为取完颜色后的操作，it为渠道的像素颜色
  */
 "use strict";
-// const html2canvas = require('html2canvas.min.js');
 class SeeColors{
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
     constructor(obj,option){
@@ -17,7 +13,9 @@ class SeeColors{
             this.$("body").style.overflowY="hidden";
         }
         this.scroller=this.$("body").scrollTop;
-        this.option=option || {auto:"auto"};
+        this.option=option || {
+            auto:"auto"
+            };
         return new Promise((resolve,reject)=>{
             this.controller().then((it)=>{
                 this.exit();
@@ -126,10 +124,11 @@ class SeeColors{
                 width:width,
                 height:height,
                 // logging:true,
-                useCORS:true,
+                // useCORS:true,
                 onrendered:function(canvas){
                     canvas.classList.add("seeColors-temp-canvas");
                     let ctx=canvas.getContext("2d");
+                    this.$("body").appendChild(canvas);
                     let imgData=ctx.getImageData(0,0,canvas.width,canvas.height).data;
                     resolve({
                         canvas:canvas,
@@ -217,11 +216,6 @@ class SeeColors{
     //删除跟随鼠标的div
     removeFollowCookies(t){
         this.$('.seeColors-follow-cooky').style.display="none";
-        // if(t){
-        //     console.log("remove2");
-        //     this.$('.seeColors-follow-cooky').remove();
-        // }
-
     }
     //为那个跟随鼠标的div提供位置和选中的颜色
     setFollowCookies(l,t,can,p,w,h){
