@@ -240,14 +240,16 @@ var Main = function () {
 
 			event_bind(convert_btn, 'click', function () {
 
-				if (cur == 2) {
-					next = 0;
-				} else {
-					next = cur + 1;
-				}
+				// if (cur == 2) {
+				// 	next = 0;
+				// } else {
+				// 	next = cur + 1;
+				// }
+				cur == 2 ? next = 0 : next = cur + 1;
 
 				box.show(cur, next);
 
+				cur == 2 ? cur = -1 : cur;
 				cur++;
 			});
 		}
@@ -499,16 +501,6 @@ var Box = function () {
 			queue[cur].style.display = 'none';
 
 			queue[next].style.display = 'block';
-			// for (var i = 0, len = queue.length; i < len; ++i) {
-
-			// 	if (event.target === queue[i]) {
-			// 		queue[i].style.display = 'none';
-
-			// 		
-
-			// 		queue[next].display = 'block';
-			// 	}
-			// }
 		}
 	}]);
 

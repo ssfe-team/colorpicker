@@ -207,14 +207,12 @@ class Main {
 
 		event_bind(convert_btn, 'click', function() {
 
-			if (cur == 2) {
-				next = 0;
-			} else {
-				next = cur + 1;
-			}
+			cur == 2 ? next = 0 : next = cur + 1;
 
 			box.show(cur, next);
 
+			cur == 2 ? cur = -1 : cur;
+			
 			cur++;
 		});
 	}
