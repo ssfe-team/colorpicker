@@ -19,14 +19,7 @@ var setting = {
 };
 
 /* Color value */
-var hex = '',
-    rgba = {
-	r: '',
-	g: '',
-	b: '',
-	a: ''
-},
-    hsla = {
+var hsla = {
 	hue: '0',
 	saturation: '100%',
 	lightness: '50%',
@@ -60,7 +53,7 @@ var s = new Selector();
 /* Color */
 
 var Color = function () {
-	function Color() {
+	function Color(color) {
 		_classCallCheck(this, Color);
 
 		this.rgb = [];
@@ -79,13 +72,13 @@ var Color = function () {
 			}
 		} else if (match = /^\s*#?([0-9a-f]{3}([0-9a-f]{3})?)\s*$/i.exec(color)) {
 
-			var _hex = match[1],
-			    len = _hex.length / 3,
+			var hex = match[1],
+			    len = hex.length / 3,
 			    index = void 0;
 
-			for (var _i = 0; _i < _hex.length; _i += len) {
+			for (var _i = 0; _i < hex.length; _i += len) {
 
-				var block = _hex.substr(_i, len);
+				var block = hex.substr(_i, len);
 
 				if (len == 1) {
 					block += block;
@@ -114,7 +107,7 @@ var Color = function () {
 					var t1 = 2 * l - t2;
 					var tempRGB = [1 / 3, 0, -1 / 3];
 					for (var _i2 = 0; _i2 < 3; _i2++) {
-						var t = H + tempRGB[_i2];
+						var t = h + tempRGB[_i2];
 						if (t < 0) t += 1;
 						if (t > 1) t -= 1;
 						if (6 * t < 1) {
@@ -154,7 +147,8 @@ var Color = function () {
 							this.hex[i] = ch;
 						}
 					}
-					if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
+					// if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
+					if (this.hex.length == 3) return '#' + this.hex[0] + this.hex[1] + this.hex[2];
 					break;
 
 				case 'hsl':
@@ -185,21 +179,28 @@ var Color = function () {
 						if (h < 0) h += 360;
 						this.hsl = [Math.round(h), (_s2 * 100).toFixed(1), (l * 100).toFixed(1)];
 					}
-					if (this.hsl.length == 3) {
-						str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
-					}
+					if (this.hsl.length == 3)
+						// str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
+						return {
+							h: this.hsl[0],
+							s: this.hsl[1] + '%',
+							l: this.hsl[2] + '%'
+						};
 					break;
 
 				case 'rgb':
 
 				default:
 					if (this.rgb.length == 3) {
-						str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
+						// str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
+						return {
+							r: this.rgb[0],
+							g: this.rgb[1],
+							b: this.rgb[2]
+						};
 					}
 					break;
 			}
-
-			return str;
 		}
 	}]);
 
@@ -367,7 +368,7 @@ var Box = function () {
 	}, {
 		key: 'appendTpl',
 		value: function appendTpl() {
-			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch" id="js-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity" id="js-opacity-control">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">\n                        <input type="text">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip" id="js-convert"></div>\n                </div>\n            </div>\n        ';
+			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch" id="js-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity" id="js-opacity-control">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">\n                        <input type="text" value="#fff">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0%">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="100%">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip" id="js-convert"></div>\n                </div>\n            </div>\n        ';
 
 			var script = s.qs('script');
 
@@ -478,6 +479,7 @@ var Box = function () {
 
 					this.update_panel(hue);
 					this.update_watch(hsla);
+					this.update_input(hsla);
 				} else {
 
 					var alpha = Math.round((x + 8) / control.clientWidth * 100) / 100;
@@ -539,16 +541,40 @@ var Box = function () {
 			watch.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
 		}
 
+		/* Update input */
+
+	}, {
+		key: 'update_input',
+		value: function update_input(para) {
+			var input_hex = s.qs('#js-input-hex input'),
+			    input_rgba = s.qsAll('#js-input-rgba input'),
+			    input_hsla = s.qsAll('#js-input-hsla input');
+
+			var color = new Color('hsl(' + para.hue + ', ' + para.saturation + ', ' + para.lightness + ')');
+
+			input_hex.value = color.toString('hex');
+
+			input_rgba[0].value = color.toString('rgb').r;
+			input_rgba[1].value = color.toString('rgb').g;
+			input_rgba[2].value = color.toString('rgb').b;
+			input_rgba[3].value = para.alpha;
+
+			input_hsla[0].value = para.hue;
+			input_hsla[1].value = para.saturation;
+			input_hsla[2].value = para.lightness;
+			input_hsla[3].value = para.alpha;
+		}
+
 		/* Show */
 
 	}, {
 		key: 'show',
 		value: function show(cur, next) {
-			var input_hex = s.qs('#js-input-hex'),
-			    input_rgba = s.qs('#js-input-rgba'),
-			    input_hsla = s.qs('#js-input-hsla');
+			var hex = s.qs('#js-input-hex'),
+			    rgba = s.qs('#js-input-rgba'),
+			    hsla = s.qs('#js-input-hsla');
 
-			var queue = [input_hex, input_rgba, input_hsla];
+			var queue = [hex, rgba, hsla];
 
 			queue[cur].style.display = 'none';
 
