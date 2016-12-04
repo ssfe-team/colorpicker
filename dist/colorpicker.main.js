@@ -487,6 +487,7 @@ var Box = function () {
 					hsla.alpha = alpha;
 
 					this.update_watch(hsla);
+					this.update_input(hsla);
 				}
 			}
 		}
@@ -511,6 +512,8 @@ var Box = function () {
 			for (var i = 0, len = queue.length; i < len; ++i) {
 				queue[i].style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ', ' + hsla.alpha + ')';
 			}
+
+			this.update_input(hsla);
 		}
 
 		/* Update panel */
