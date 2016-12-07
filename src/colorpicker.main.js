@@ -3,98 +3,9 @@
 
 /* Converts: HSL, RGB, HEX */
 const converts = {
-	// hsb2rgb: (hsb) => {
-	// 	let rgb = {};
-	// 	let h = Math.round(hsb.h);
-	// 	let s = Math.round(hsb.s * 255 / 100);
-	// 	let v = Math.round(hsb.b * 255 / 100);
-	// 	if(s === 0) {
-	// 	    rgb.r = rgb.g = rgb.b = v;
-	// 	} else {
-	// 	    let t1 = v;
-	// 	    let t2 = (255 - s) * v / 255;
-	// 	    let t3 = (t1 - t2) * (h % 60) / 60;
-	// 	    if( h === 360 ) h = 0;
-	// 	    if( h < 60 ) { rgb.r = t1; rgb.b = t2; rgb.g = t2 + t3; }
-	// 	    else if( h < 120 ) { rgb.g = t1; rgb.b = t2; rgb.r = t1 - t3; }
-	// 	    else if( h < 180 ) { rgb.g = t1; rgb.r = t2; rgb.b = t2 + t3; }
-	// 	    else if( h < 240 ) { rgb.b = t1; rgb.r = t2; rgb.g = t1 - t3; }
-	// 	    else if( h < 300 ) { rgb.b = t1; rgb.g = t2; rgb.r = t2 + t3; }
-	// 	    else if( h < 360 ) { rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3; }
-	// 	    else { rgb.r = 0; rgb.g = 0; rgb.b = 0; }
-	// 	}
-	// 	return {
-	// 	    r: Math.round(rgb.r),
-	// 	    g: Math.round(rgb.g),
-	// 	    b: Math.round(rgb.b)
-	// 	};
-	// },	
-	// rgbString2hex: (rgb) => {
-	// 	rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-	// 	return (rgb && rgb.length === 4) ? '#' +
-	// 	('0' + parseInt(rgb[1],10).toString(16)).slice(-2) +
-	// 	('0' + parseInt(rgb[2],10).toString(16)).slice(-2) +
-	// 	('0' + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-	// }, 
-	// rgb2hex: (rgb) => {
-	// 	let hex = [
-	// 	    rgb.r.toString(16),
-	// 	    rgb.g.toString(16),
-	// 	    rgb.b.toString(16)
-	// 	];
-	// 	// $.each(hex, function(nr, val) {
-	// 	//     if (val.length === 1) hex[nr] = '0' + val;
-	// 	// });
-	// 	hex.forEach(function(nr, val) {
-	// 		if (val.length == 1) hex[nr] = '0' + val;
-	// 	});
-	// 	return '#' + hex.join('');
-	// },
-	// hsb2hex: (hsb) => {
-	// 	return converts.rgb2hex(converts.hsb2rgb(hsb));
-	// },
-	// hex2hsb: (hex) => {
-	// 	let hsb = rgb2hsb(hex2rgb(hex));
- //     	if( hsb.s === 0 ) hsb.h = 360;
- //     	return hsb;
-	// },
-	// rgb2hsb: (rgb) => {
-	// 	let hsb = { h: 0, s: 0, b: 0 };
-	// 	let min = Math.min(rgb.r, rgb.g, rgb.b);
-	// 	let max = Math.max(rgb.r, rgb.g, rgb.b);
-	// 	let delta = max - min;
-	// 	hsb.b = max;
-	// 	hsb.s = max !== 0 ? 255 * delta / max : 0;
-	// 	if( hsb.s !== 0 ) {
-	// 	    if( rgb.r === max ) {
-	// 	        hsb.h = (rgb.g - rgb.b) / delta;
-	// 	    } else if( rgb.g === max ) {
-	// 	        hsb.h = 2 + (rgb.b - rgb.r) / delta;
-	// 	    } else {
-	// 	        hsb.h = 4 + (rgb.r - rgb.g) / delta;
-	// 	    }
-	// 	} else {
-	// 	    hsb.h = -1;
-	// 	}
-	// 	hsb.h *= 60;
-	// 	if( hsb.h < 0 ) {
-	// 	    hsb.h += 360;
-	// 	}
-	// 	hsb.s *= 100/255;
-	// 	hsb.b *= 100/255;
-	// 	return hsb;
-	// },
-	// hex2rgb: (hex) => {
-	// 	hex = parseInt(((hex.indexOf('#') > -1) ? hex.substring(1) : hex), 16);
-	// 	return {
-	// 	    /* jshint ignore:start */
-	// 	    r: hex >> 16,
-	// 	    g: (hex & 0x00FF00) >> 8,
-	// 	    b: (hex & 0x0000FF)
-	// 	    /* jshint ignore:end */
-	// 	};
-	// }
-	
+	hsl2rgb: (hsl) => {
+		
+	}
 };
 
 /* Setting */
@@ -104,15 +15,7 @@ let setting = {
 };
 
 /* Color value */
-let hex = '',
-
-rgba = {
-	r: '',
-	g: '',
-	b: '',
-	a: ''
-},
-hsla = {
+let hsla = {
 	hue: '0',
 	saturation: '100%',
 	lightness: '50%',
@@ -130,6 +33,157 @@ class Selector {
 }
 
 const s = new Selector();
+
+/* Color */
+class Color {
+	constructor(color) {
+
+		this.rgb = [];
+		this.hex = [];
+		this.hsl = [];
+
+		let match = null;
+
+		if (/^\D*(\d{1,3})[^°\d]+(\d{1,3})[^%\d]+(\d{1,3})\D*$/.test(color)) {
+		    for (let i = 0; i < 3; i++) {
+		        this.rgb[i] = RegExp['$' + (i + 1)] - 0;
+		        if (this.rgb[i] > 255) {
+		            this.rgb = [];
+		            break;
+		        }
+		    }
+		} else if (match = /^\s*#?([0-9a-f]{3}([0-9a-f]{3})?)\s*$/i.exec(color)) {
+
+		    let hex = match[1],
+		        len = hex.length / 3,
+		        index;
+
+		    for (let i = 0; i < hex.length; i += len) {
+
+		        let block = hex.substr(i, len);
+
+		        if (len == 1) {
+		            block += block;   
+		        }
+
+		        index = i / len;
+		        this.hex[index] = block;
+		        this.rgb[index] = parseInt(block, 16);
+		    }
+		} else if (/^\D*(\d+)\D+(\d+(\.\d+)?)%\D+(\d+(\.\d+)?)%\D*$/.test(color)) {
+
+		    let h = RegExp.$1 - 0,
+		        s = RegExp.$2 - 0,
+		        l = RegExp.$4 - 0;
+
+		    if (h <= 360 && s <= 100 && l <= 100) {
+		        this.hsl = [h, s, l];
+
+		        h /= 360,
+		        s /= 100,
+		        l /= 100;
+
+		        if (s == 0) {
+		            let r = g = b = Math.ceil(l * 255);
+		            this.rgb = [r, g, b];
+		        } else {
+		            let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
+		            let t1 = 2 * l - t2;
+		            let tempRGB = [1 / 3, 0, -1 / 3];
+		            for (let i = 0; i < 3; i++) {
+		                let t = h + tempRGB[i];
+		                if (t < 0) t += 1;
+		                if (t > 1) t -= 1;
+		                if (6 * t < 1) {
+		                    t = t1 + (t2 - t1) * 6 * t;
+		                } else if (2 * t < 1) {
+		                    t = t2;
+		                } else if (3 * t < 2) {
+		                    t = t1 + (t2 - t1) * (2 / 3 - t) * 6;
+		                } else {
+		                    t = t1;
+		                }
+		                tempRGB[i] = Math.ceil(t * 255);
+		            }
+		            this.rgb = tempRGB;
+		        }
+		    }
+		}
+	}
+
+	toString(style) {
+
+		let str = '';
+
+		if (style) {
+		    style = style.toLowerCase();   
+		}
+
+		switch (style) {
+
+		    case 'hex':
+		        if (this.hex.length != 3 && this.rgb.length == 3) {
+		            for (let i = 0; i < this.rgb.length; i++) {
+		                let ch = this.rgb[i].toString(16);
+		                if (ch.length == 1) ch = '0' + ch;
+		                this.hex[i] = ch;
+		            }
+		        }
+		        // if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
+		       	if (this.hex.length == 3) 
+		       		return '#' + this.hex[0] + this.hex[1] + this.hex[2]; 
+		        break;
+
+		    case 'hsl':
+		        if (this.hsl.length != 3 && this.rgb.length == 3) {
+		            let h, s, l;
+		            let r = this.rgb[0] / 255,
+		                g = this.rgb[1] / 255,
+		                b = this.rgb[2] / 255;
+		            let max = Math.max(r, g, b);
+		            let min = Math.min(r, g, b);
+		            l = (max + min) / 2;
+		            let diff = max - min;
+		            s = diff == 0 ? 0 : diff / (1 - Math.abs(2 * l - 1));
+
+		            if (s == 0) {
+		                h = 0;
+		            } else if (r == max) {
+		                h = (g - b) / diff % 6;
+		            } else if (g == max) {
+		                h = (b - r) / diff + 2;
+		            } else {
+		                h = (r - g) / diff + 4;
+		            }
+
+		            h *= 60;
+		            if (h < 0) h += 360;
+		            this.hsl = [Math.round(h), (s * 100).toFixed(1), (l * 100).toFixed(1)];
+		        }
+		        if (this.hsl.length == 3) 
+		            // str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
+		            return {
+		            	h: this.hsl[0],
+		            	s: this.hsl[1] + '%',
+		            	l: this.hsl[2] + '%'
+		            };
+		        break;
+
+		    case 'rgb':
+
+		    default:
+		        if (this.rgb.length == 3) {
+		            // str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
+		        	return {
+		        		r: this.rgb[0],
+		        		g: this.rgb[1],
+		        		b: this.rgb[2]
+		        	};
+		        }
+		        break;
+		}
+	}
+}
 
 class Main {
 
@@ -271,42 +325,42 @@ class Box {
                 </div>
                 <div class="colorpicker-toolbar-input">
                     <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">
-                        <input type="text">
+                        <input type="text" value="#fff">
                         <div class="colorpicker-toolbar-input-text">HEX</div>
                     </div>
                     <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="255">
                             <div class="colorpicker-toolbar-input-text">R</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="255">
                             <div class="colorpicker-toolbar-input-text">G</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="255">
                             <div class="colorpicker-toolbar-input-text">B</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="1">
                             <div class="colorpicker-toolbar-input-text">A</div>
                         </div>
                     </div>
                     <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="0">
                             <div class="colorpicker-toolbar-input-text">H</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="0%">
                             <div class="colorpicker-toolbar-input-text">S</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="100%">
                             <div class="colorpicker-toolbar-input-text">L</div>
                         </div>
                         <div class="colorpicker-toolbar-input-wrap">
-                            <input type="text">
+                            <input type="text" value="1">
                             <div class="colorpicker-toolbar-input-text">A</div>
                         </div>
                     </div>
@@ -421,6 +475,7 @@ class Box {
 
 				this.update_panel(hue);
 				this.update_watch(hsla);
+				this.update_input(hsla);
 
 			} else {
 				
@@ -429,6 +484,7 @@ class Box {
 				hsla.alpha = alpha;
 
 				this.update_watch(hsla);
+				this.update_input(hsla);
 			}
 		}
 	}
@@ -450,6 +506,8 @@ class Box {
 		for (var i = 0, len = queue.length; i < len; ++i) {
 			queue[i].style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ', ' + hsla.alpha + ')';
 		}
+
+		this.update_input(hsla);
 	}
 
 	/* Update panel */
@@ -470,13 +528,34 @@ class Box {
 		watch.style.background = 'hsla(' + hue + ', ' + saturation + ', ' + lightness + ', ' + alpha + ')';
 	}
 
+	/* Update input */
+	update_input(para) {
+		const input_hex = s.qs('#js-input-hex input'),
+			 input_rgba = s.qsAll('#js-input-rgba input'),
+		     input_hsla = s.qsAll('#js-input-hsla input');
+
+		let color = new Color('hsl(' + para.hue + ', ' + para.saturation + ', ' + para.lightness + ')');
+		
+		input_hex.value = color.toString('hex');
+
+		input_rgba[0].value = color.toString('rgb').r;
+		input_rgba[1].value = color.toString('rgb').g;
+		input_rgba[2].value = color.toString('rgb').b;
+		input_rgba[3].value = para.alpha;
+
+		input_hsla[0].value = para.hue;
+		input_hsla[1].value = para.saturation;
+		input_hsla[2].value = para.lightness;
+		input_hsla[3].value = para.alpha;
+	}
+
 	/* Show */
 	show(cur, next) {
-		const input_hex = s.qs('#js-input-hex'),
-			 input_rgba = s.qs('#js-input-rgba'),
-		     input_hsla = s.qs('#js-input-hsla');
+		const hex = s.qs('#js-input-hex'),
+			 rgba = s.qs('#js-input-rgba'),
+		     hsla = s.qs('#js-input-hsla');
 
-		let queue = [input_hex, input_rgba, input_hsla];
+		let queue = [hex, rgba, hsla];
 
 		queue[cur].style.display = 'none';
 

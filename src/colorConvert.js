@@ -33,24 +33,23 @@ function Color(color) {
         }
     } else if (/^\D*(\d+)\D+(\d+(\.\d+)?)%\D+(\d+(\.\d+)?)%\D*$/.test(color)) {
 
-        let H = RegExp.$1 - 0,
-            S = RegExp.$2 - 0,
-            L = RegExp.$4 - 0;
+        let h = RegExp.$1 - 0,
+            s = RegExp.$2 - 0,
+            l = RegExp.$4 - 0;
 
-        if (H <= 360 && S <= 100 && L <= 100) {
+        if (h <= 360 && s <= 100 && l <= 100) sl
+            this.hsl = [h, s, l];
 
-            this.hsl = [H, S, L];
+            h /= 360,
+            s /= 100,
+            l /= 100;
 
-            H /= 360,
-            S /= 100,
-            L /= 100;
-
-            if (S == 0) {
-                let r = g = b = Math.ceil(L * 255);
+            if (s == 0) {
+                let r = g = b = Math.ceil(l * 255);
                 this.rgb = [r, g, b];
             } else {
-                let t2 = L >= 0.5 ? L + S - L * S : L * (1 + S);
-                let t1 = 2 * L - t2;
+                let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
+                let t1 = 2 * l - t2;
                 let tempRGB = [1 / 3, 0, -1 / 3];
                 for (let i = 0; i < 3; i++) {
                     let t = H + tempRGB[i];
@@ -73,7 +72,7 @@ function Color(color) {
     }
 }
 
-Color.prototype.toString = function (style) {
+Color.prototype.toString = function(style) {
 
     let str = '';
 
@@ -96,29 +95,29 @@ Color.prototype.toString = function (style) {
 
         case 'hsl':
             if (this.hsl.length != 3 && this.rgb.length == 3) {
-                let H, S, L;
+                let h, s, l;
                 let r = this.rgb[0] / 255,
                     g = this.rgb[1] / 255,
                     b = this.rgb[2] / 255;
                 let max = Math.max(r, g, b);
                 let min = Math.min(r, g, b);
-                L = (max + min) / 2;
+                l = (max + min) / 2;
                 let diff = max - min;
-                S = diff == 0 ? 0 : diff / (1 - Math.abs(2 * L - 1));
+                s = diff == 0 ? 0 : diff / (1 - Math.abs(2 * l - 1));
 
-                if (S == 0) {
-                    H = 0;
+                if (s == 0) {
+                    h = 0;
                 } else if (r == max) {
-                    H = (g - b) / diff % 6;
+                    h = (g - b) / diff % 6;
                 } else if (g == max) {
-                    H = (b - r) / diff + 2;
+                    h = (b - r) / diff + 2;
                 } else {
-                    H = (r - g) / diff + 4;
+                    h = (r - g) / diff + 4;
                 }
 
-                H *= 60;
-                if (H < 0) H += 360;
-                this.hsl = [Math.round(H), (S * 100).toFixed(1), (L * 100).toFixed(1)];
+                h *= 60;
+                if (h < 0) h += 360;
+                this.hsl = [Math.round(h), (s * 100).toFixed(1), (l * 100).toFixed(1)];
             }
             if (this.hsl.length == 3) {
                 str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
