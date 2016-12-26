@@ -25,7 +25,7 @@ let hsla = {
 /* Selector */
 class Selector {
 	qs(selector) {
-		return document.querySelector(selector)
+		return document.querySelector(selector);
 	}
 	qsAll(selector) {
 		return document.querySelectorAll(selector);
@@ -216,6 +216,10 @@ class Main {
 		  opacity_movebar = s.qs('#js-opacity-movebar'),
 		      convert_btn = s.qs('#js-convert');
 		
+		const hexInput = s.qs('#js-input-hex input'),
+			  rgbaInput = s.qsAll('#js-input-rgba input'),
+			  hslaInput = s.qsAll('#js-input-hsla input');
+
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
 		//Trigger box 
@@ -256,10 +260,6 @@ class Main {
 			box.move(this, event);
 		});
 
-		// event_bind(control, 'click', function(event) {
-		// 	box.move(this, event);
-		// });
-
 		//Convert
 		let cur = 0, next;
 
@@ -273,6 +273,51 @@ class Main {
 
 			cur++;
 		});
+
+		//Input Change
+		event_bind(hexInput, 'change', function() {
+			let hex = this.value;
+
+			let color = new Color(hex);
+
+			let hsl = color.toString('hsl');
+
+			if (hsl) {
+				hsla.hue = hsl.h;
+				hsla.saturation = hsl.s;
+				hsla.lightness = hsl.l;
+			}
+		});
+
+		for (let i = 0; i < 4; ++i) {
+			event_bind(rgbaInput[i], 'change', function() {
+				let rgb = this.value;
+
+				let color = new Color(rgb);
+
+				let hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsl.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;
+				}
+			});
+
+			event_bind(hslaInput[i], 'change', function() {
+				let hsl = this.value;
+
+				let color = new Color(hsl);
+
+				hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsl.hue = hsl.h;
+					hsl.saturation = hsl.s;
+					hsl.lightness = hsl.l;
+				}
+			});
+		}
 	}
 
 	/* init */
@@ -560,5 +605,10 @@ class Box {
 		queue[cur].style.display = 'none';
 
 		queue[next].style.display = 'block';
+	}
+
+	/* Change update */
+	change_update(para) {
+
 	}
 }
