@@ -252,6 +252,10 @@ var Main = function () {
 			    opacity_movebar = s.qs('#js-opacity-movebar'),
 			    convert_btn = s.qs('#js-convert');
 
+			var hexInput = s.qs('#js-input-hex input'),
+			    rgbaInput = s.qsAll('#js-input-rgba input'),
+			    hslaInput = s.qsAll('#js-input-hsla input');
+
 			var queue = [movebar, solid_movebar, opacity_movebar];
 
 			//Trigger box 
@@ -306,10 +310,25 @@ var Main = function () {
 
 				box.show(cur, next);
 
-				cur == 2 ? cur = -1 : cur;
+				cur == 2 ? cur = -1 : cur;s;
 
 				cur++;
 			});
+
+			//Input Change
+			event_bind(hexInput, 'change', function () {
+				console.log('hex change');
+			});
+
+			for (var _i3 = 0; _i3 < 4; ++_i3) {
+				event_bind(rgbaInput[_i3], 'change', function () {
+					console.log('rgba change');
+				});
+
+				event_bind(hslaInput[_i3], 'change', function () {
+					console.log('hsla changes');
+				});
+			}
 		}
 
 		/* init */
