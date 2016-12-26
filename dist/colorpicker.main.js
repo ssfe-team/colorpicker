@@ -252,6 +252,10 @@ var Main = function () {
 			    opacity_movebar = s.qs('#js-opacity-movebar'),
 			    convert_btn = s.qs('#js-convert');
 
+			var hexInput = s.qs('#js-input-hex input'),
+			    rgbaInput = s.qsAll('#js-input-rgba input'),
+			    hslaInput = s.qsAll('#js-input-hsla input');
+
 			var queue = [movebar, solid_movebar, opacity_movebar];
 
 			//Trigger box 
@@ -292,10 +296,6 @@ var Main = function () {
 				box.move(this, event);
 			});
 
-			// event_bind(control, 'click', function(event) {
-			// 	box.move(this, event);
-			// });
-
 			//Convert
 			var cur = 0,
 			    next = void 0;
@@ -310,6 +310,51 @@ var Main = function () {
 
 				cur++;
 			});
+
+			//Input Change
+			event_bind(hexInput, 'change', function () {
+				var hex = this.value;
+
+				var color = new Color(hex);
+
+				var hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsla.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;
+				}
+			});
+
+			for (var _i3 = 0; _i3 < 4; ++_i3) {
+				event_bind(rgbaInput[_i3], 'change', function () {
+					var rgb = this.value;
+
+					var color = new Color(rgb);
+
+					var hsl = color.toString('hsl');
+
+					if (hsl) {
+						hsl.hue = hsl.h;
+						hsla.saturation = hsl.s;
+						hsla.lightness = hsl.l;
+					}
+				});
+
+				event_bind(hslaInput[_i3], 'change', function () {
+					var hsl = this.value;
+
+					var color = new Color(hsl);
+
+					hsl = color.toString('hsl');
+
+					if (hsl) {
+						hsl.hue = hsl.h;
+						hsl.saturation = hsl.s;
+						hsl.lightness = hsl.l;
+					}
+				});
+			}
 		}
 
 		/* init */
@@ -583,6 +628,12 @@ var Box = function () {
 
 			queue[next].style.display = 'block';
 		}
+
+		/* Change update */
+
+	}, {
+		key: 'change_update',
+		value: function change_update(para) {}
 	}]);
 
 	return Box;
