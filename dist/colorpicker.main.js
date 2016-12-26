@@ -296,10 +296,6 @@ var Main = function () {
 				box.move(this, event);
 			});
 
-			// event_bind(control, 'click', function(event) {
-			// 	box.move(this, event);
-			// });
-
 			//Convert
 			var cur = 0,
 			    next = void 0;
@@ -310,23 +306,53 @@ var Main = function () {
 
 				box.show(cur, next);
 
-				cur == 2 ? cur = -1 : cur;s;
+				cur == 2 ? cur = -1 : cur;
 
 				cur++;
 			});
 
 			//Input Change
 			event_bind(hexInput, 'change', function () {
-				console.log('hex change');
+				var hex = this.value;
+
+				var color = new Color(hex);
+
+				var hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsla.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;
+				}
 			});
 
 			for (var _i3 = 0; _i3 < 4; ++_i3) {
 				event_bind(rgbaInput[_i3], 'change', function () {
-					console.log('rgba change');
+					var rgb = this.value;
+
+					var color = new Color(rgb);
+
+					var hsl = color.toString('hsl');
+
+					if (hsl) {
+						hsl.hue = hsl.h;
+						hsla.saturation = hsl.s;
+						hsla.lightness = hsl.l;
+					}
 				});
 
 				event_bind(hslaInput[_i3], 'change', function () {
-					console.log('hsla changes');
+					var hsl = this.value;
+
+					var color = new Color(hsl);
+
+					hsl = color.toString('hsl');
+
+					if (hsl) {
+						hsl.hue = hsl.h;
+						hsl.saturation = hsl.s;
+						hsl.lightness = hsl.l;
+					}
 				});
 			}
 		}
@@ -602,6 +628,12 @@ var Box = function () {
 
 			queue[next].style.display = 'block';
 		}
+
+		/* Change update */
+
+	}, {
+		key: 'change_update',
+		value: function change_update(para) {}
 	}]);
 
 	return Box;

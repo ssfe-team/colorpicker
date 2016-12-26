@@ -276,16 +276,46 @@ class Main {
 
 		//Input Change
 		event_bind(hexInput, 'change', function() {
-			console.log('hex change');
+			let hex = this.value;
+
+			let color = new Color(hex);
+
+			let hsl = color.toString('hsl');
+
+			if (hsl) {
+				hsla.hue = hsl.h;
+				hsla.saturation = hsl.s;
+				hsla.lightness = hsl.l;
+			}
 		});
 
 		for (let i = 0; i < 4; ++i) {
 			event_bind(rgbaInput[i], 'change', function() {
-				console.log('rgba change');
+				let rgb = this.value;
+
+				let color = new Color(rgb);
+
+				let hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsl.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;
+				}
 			});
 
 			event_bind(hslaInput[i], 'change', function() {
-				console.log('hsla changes');
+				let hsl = this.value;
+
+				let color = new Color(hsl);
+
+				hsl = color.toString('hsl');
+
+				if (hsl) {
+					hsl.hue = hsl.h;
+					hsl.saturation = hsl.s;
+					hsl.lightness = hsl.l;
+				}
 			});
 		}
 	}
@@ -575,5 +605,10 @@ class Box {
 		queue[cur].style.display = 'none';
 
 		queue[next].style.display = 'block';
+	}
+
+	/* Change update */
+	change_update(para) {
+
 	}
 }
