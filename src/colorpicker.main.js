@@ -664,7 +664,7 @@ class Box {
 
 		const offsetWidth = panel.offsetWidth,
 		     offsetHeight = panel.offsetHeight,
-		     movebarWidth = movebar.offsetWidth / 2;
+		     movebarWidth = movebar.offsetWidth / 2,
 		     controlWidth = control.offsetWidth,
 		     controlBarWidth = sodil_movebar.offsetWidth / 2;
 
@@ -692,6 +692,6 @@ class Box {
 		//update watch 
 
 		watch.style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ',' + hsla.alpha + ')';
-		
+
 	}
 }

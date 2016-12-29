@@ -692,8 +692,9 @@ var Box = function () {
 
 			var offsetWidth = panel.offsetWidth,
 			    offsetHeight = panel.offsetHeight,
-			    movebarWidth = movebar.offsetWidth / 2;
-			controlWidth = control.offsetWidth, controlBarWidth = sodil_movebar.offsetWidth / 2;
+			    movebarWidth = movebar.offsetWidth / 2,
+			    controlWidth = control.offsetWidth,
+			    controlBarWidth = sodil_movebar.offsetWidth / 2;
 
 			//upadate movebar and background
 
