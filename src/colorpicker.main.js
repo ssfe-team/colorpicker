@@ -666,7 +666,7 @@ class Box {
 		     offsetHeight = panel.offsetHeight,
 		     movebarWidth = movebar.offsetWidth / 2,
 		     controlWidth = control.offsetWidth,
-		     controlBarWidth = sodil_movebar.offsetWidth / 2;
+		     controlBarWidth = solid_movebar.offsetWidth / 2;
 
 
 		//upadate movebar and background
@@ -681,11 +681,11 @@ class Box {
 
 		//update control bar
 
-		let offsetX1 = controlWidth * parseInt(hsla.hue.split('%')[0]) / 360 - controlBarWidth;   
+		let offsetX1 = controlWidth * parseInt(hsla.hue) / 360 - controlBarWidth;   
 
 		solid_movebar.style.left = offsetX1 + 'px'; 
 
-		let offsetX2 = controlWidth * parseInt(hsla.alpha) - controlBarWidth;
+		let offsetX2 = controlWidth * parseInt(hsla.alpha * 100) / 100 - controlBarWidth;
 
 		opacity_movebar.style.left = offsetX2 + 'px';
 
