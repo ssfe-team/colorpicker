@@ -2,11 +2,6 @@
 // import {screen} from './colorpicker.screen.js';
 
 /* Converts: HSL, RGB, HEX */
-const converts = {
-	hsl2rgb: (hsl) => {
-		
-	}
-};
 
 /* Setting */
 let setting = {
