@@ -24,6 +24,12 @@ var hsla = {
 	saturation: '100%',
 	lightness: '50%',
 	alpha: '1'
+},
+    rgba = {
+	r: '255',
+	g: '255',
+	b: '255',
+	a: '1'
 };
 
 /* Selector */
@@ -147,7 +153,6 @@ var Color = function () {
 							this.hex[i] = ch;
 						}
 					}
-					// if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
 					if (this.hex.length == 3) return '#' + this.hex[0] + this.hex[1] + this.hex[2];
 					break;
 
@@ -179,20 +184,17 @@ var Color = function () {
 						if (h < 0) h += 360;
 						this.hsl = [Math.round(h), (_s2 * 100).toFixed(1), (l * 100).toFixed(1)];
 					}
-					if (this.hsl.length == 3)
-						// str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
-						return {
-							h: this.hsl[0],
-							s: this.hsl[1] + '%',
-							l: this.hsl[2] + '%'
-						};
+					if (this.hsl.length == 3) return {
+						h: this.hsl[0],
+						s: this.hsl[1] + '%',
+						l: this.hsl[2] + '%'
+					};
 					break;
 
 				case 'rgb':
 
 				default:
 					if (this.rgb.length == 3) {
-						// str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
 						return {
 							r: this.rgb[0],
 							g: this.rgb[1],
@@ -312,7 +314,10 @@ var Main = function () {
 			});
 
 			//Input Change
+			var temp = '';
+
 			event_bind(hexInput, 'change', function () {
+
 				var hex = this.value;
 
 				var color = new Color(hex);
@@ -323,14 +328,29 @@ var Main = function () {
 					hsla.hue = hsl.h;
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;
+				} else {
+					this.value = temp;
 				}
 			});
 
-			for (var _i3 = 0; _i3 < 4; ++_i3) {
-				event_bind(rgbaInput[_i3], 'change', function () {
-					var rgb = this.value;
+			event_bind(hexInput, 'focus', function () {
+				temp = this.value;
+			});
 
-					var color = new Color(rgb);
+			var _loop = function _loop(_i3) {
+				event_bind(rgbaInput[_i3], 'change', function () {
+
+					if (_i3 == 0) {
+						rgba.r = this.value;
+					} else if (_i3 == 1) {
+						rgba.g = this.value;
+					} else if (_i3 == 2) {
+						rgba.b = this.value;
+					} else {
+						rgba.a = this.value;
+					}
+
+					var color = new Color('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
 
 					var hsl = color.toString('hsl');
 
@@ -338,22 +358,52 @@ var Main = function () {
 						hsl.hue = hsl.h;
 						hsla.saturation = hsl.s;
 						hsla.lightness = hsl.l;
+						hsla.alpha = rgba.a;
+
+						console.log(hsla);
+					} else {
+						this.value = temp;
 					}
 				});
 
 				event_bind(hslaInput[_i3], 'change', function () {
-					var hsl = this.value;
 
-					var color = new Color(hsl);
+					if (_i3 == 0) {
+						hsla.hue = this.value;
+					} else if (_i3 == 1) {
+						hsla.saturation = this.value;
+					} else if (_i3 == 2) {
+						hsla.lightness = this.value;
+					} else {
+						hsla.alpha = this.value;
+					}
 
-					hsl = color.toString('hsl');
+					var color = new Color('hsl(' + hsla.hue + ',' + hsla.saturation + ', ' + hsla.lightness + ')');
+
+					var hsl = color.toString('hsl');
 
 					if (hsl) {
-						hsl.hue = hsl.h;
-						hsl.saturation = hsl.s;
-						hsl.lightness = hsl.l;
+						hsla.hue = hsl.h;
+						hsla.saturation = hsl.s;
+						hsla.lightness = hsl.l;
+
+						console.log(hsla);
+					} else {
+						this.value = temp;
 					}
 				});
+
+				event_bind(rgbaInput[_i3], 'focus', function () {
+					temp = this.value;
+				});
+
+				event_bind(hslaInput[_i3], 'focus', function () {
+					temp = this.value;
+				});
+			};
+
+			for (var _i3 = 0; _i3 < 4; ++_i3) {
+				_loop(_i3);
 			}
 		}
 
@@ -602,10 +652,10 @@ var Box = function () {
 
 			input_hex.value = color.toString('hex');
 
-			input_rgba[0].value = color.toString('rgb').r;
-			input_rgba[1].value = color.toString('rgb').g;
-			input_rgba[2].value = color.toString('rgb').b;
-			input_rgba[3].value = para.alpha;
+			rgba.r = input_rgba[0].value = color.toString('rgb').r;
+			rgba.b = input_rgba[1].value = color.toString('rgb').g;
+			rgba.b = input_rgba[2].value = color.toString('rgb').b;
+			rgba.a = input_rgba[3].value = para.alpha;
 
 			input_hsla[0].value = para.hue;
 			input_hsla[1].value = para.saturation;
@@ -633,7 +683,20 @@ var Box = function () {
 
 	}, {
 		key: 'change_update',
-		value: function change_update(para) {}
+		value: function change_update(type, target) {
+
+			var color = new Color(type);
+
+			var hsl = color.toString('hsl');
+
+			if (hsl) {
+				hsl.hue = hsl.h;
+				hsla.saturation = hsl.s;
+				hsla.lightness = hsl.l;
+
+				console.log(hsla);
+			}
+		}
 	}]);
 
 	return Box;

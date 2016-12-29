@@ -20,7 +20,13 @@ let hsla = {
 	saturation: '100%',
 	lightness: '50%',
 	alpha: '1'
-};
+},
+	rgba = {
+		r: '255',
+		g: '255',
+		b: '255',
+		a: '1'
+	};
 
 /* Selector */
 class Selector {
@@ -129,7 +135,6 @@ class Color {
 		                this.hex[i] = ch;
 		            }
 		        }
-		        // if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
 		       	if (this.hex.length == 3) 
 		       		return '#' + this.hex[0] + this.hex[1] + this.hex[2]; 
 		        break;
@@ -161,7 +166,6 @@ class Color {
 		            this.hsl = [Math.round(h), (s * 100).toFixed(1), (l * 100).toFixed(1)];
 		        }
 		        if (this.hsl.length == 3) 
-		            // str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
 		            return {
 		            	h: this.hsl[0],
 		            	s: this.hsl[1] + '%',
@@ -173,8 +177,7 @@ class Color {
 
 		    default:
 		        if (this.rgb.length == 3) {
-		            // str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
-		        	return {
+		        	return { 
 		        		r: this.rgb[0],
 		        		g: this.rgb[1],
 		        		b: this.rgb[2]
@@ -275,7 +278,10 @@ class Main {
 		});
 
 		//Input Change
+		let temp = '';
+
 		event_bind(hexInput, 'change', function() {
+
 			let hex = this.value;
 
 			let color = new Color(hex);
@@ -286,14 +292,29 @@ class Main {
 				hsla.hue = hsl.h;
 				hsla.saturation = hsl.s;
 				hsla.lightness = hsl.l;
+			} else {
+				this.value = temp;
 			}
+		});
+
+		event_bind(hexInput, 'focus', function() {
+			temp = this.value;
 		});
 
 		for (let i = 0; i < 4; ++i) {
 			event_bind(rgbaInput[i], 'change', function() {
-				let rgb = this.value;
 
-				let color = new Color(rgb);
+				if (i == 0) {
+					rgba.r = this.value;
+				} else if (i == 1) {
+					rgba.g = this.value;
+				} else if (i == 2) {
+					rgba.b = this.value;
+				} else {
+					rgba.a = this.value;
+				}
+
+				let color = new Color('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
 
 				let hsl = color.toString('hsl');
 
@@ -301,21 +322,47 @@ class Main {
 					hsl.hue = hsl.h;
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;
+					hsla.alpha = rgba.a;
+				
+					console.log(hsla);
+				} else {
+					this.value = temp;
 				}
 			});
 
 			event_bind(hslaInput[i], 'change', function() {
-				let hsl = this.value;
+				
+				if (i == 0) {
+					hsla.hue = this.value;
+				} else if (i == 1) {
+					hsla.saturation = this.value;
+				} else if (i == 2) {
+					hsla.lightness = this.value;
+				} else {
+					hsla.alpha = this.value;
+				}
 
-				let color = new Color(hsl);
+				let color = new Color('hsl(' + hsla.hue + ',' + hsla.saturation + ', ' + hsla.lightness + ')');
 
-				hsl = color.toString('hsl');
+				let hsl = color.toString('hsl');
 
 				if (hsl) {
-					hsl.hue = hsl.h;
-					hsl.saturation = hsl.s;
-					hsl.lightness = hsl.l;
+					hsla.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;	
+				
+					console.log(hsla);
+				} else {
+					this.value = temp;
 				}
+			});
+
+			event_bind(rgbaInput[i], 'focus', function() {
+				temp = this.value;
+			});
+
+			event_bind(hslaInput[i], 'focus', function() {
+				temp = this.value;
 			});
 		}
 	}
@@ -514,7 +561,7 @@ class Box {
 
 				let hue = Math.round((1 - (x + 8) / control.clientWidth) * 360);
 
-				hue == 360 ? hue = 0 : hue ;
+				hue == 360 ? hue = 0 : hue;
 
 				hsla.hue = hue;
 
@@ -583,10 +630,10 @@ class Box {
 		
 		input_hex.value = color.toString('hex');
 
-		input_rgba[0].value = color.toString('rgb').r;
-		input_rgba[1].value = color.toString('rgb').g;
-		input_rgba[2].value = color.toString('rgb').b;
-		input_rgba[3].value = para.alpha;
+		rgba.r = input_rgba[0].value = color.toString('rgb').r;
+		rgba.b = input_rgba[1].value = color.toString('rgb').g;
+		rgba.b = input_rgba[2].value = color.toString('rgb').b;
+		rgba.a = input_rgba[3].value = para.alpha;
 
 		input_hsla[0].value = para.hue;
 		input_hsla[1].value = para.saturation;
@@ -608,7 +655,18 @@ class Box {
 	}
 
 	/* Change update */
-	change_update(para) {
+	change_update(type, target) {
 
+		let color = new Color(type);
+
+		let hsl = color.toString('hsl');
+
+		if (hsl) {
+			hsl.hue = hsl.h;
+			hsla.saturation = hsl.s;
+			hsla.lightness = hsl.l;
+
+			console.log(hsla);
+		}
 	}
 }
