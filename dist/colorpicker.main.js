@@ -314,9 +314,9 @@ var Main = function () {
 			});
 
 			//Input Change
-			var temp = '';
+			// let temp = '';
 
-			event_bind(hexInput, 'change', function () {
+			event_bind(hexInput, 'input', function () {
 
 				var hex = this.value;
 
@@ -328,17 +328,17 @@ var Main = function () {
 					hsla.hue = hsl.h;
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;
-				} else {
-					this.value = temp;
+
+					box.update_change();
 				}
 			});
 
-			event_bind(hexInput, 'focus', function () {
-				temp = this.value;
-			});
+			// event_bind(hexInput, 'focus', function() {
+			// 	temp = this.value;
+			// });
 
 			var _loop = function _loop(_i3) {
-				event_bind(rgbaInput[_i3], 'change', function () {
+				event_bind(rgbaInput[_i3], 'input', function () {
 
 					if (_i3 == 0) {
 						rgba.r = this.value;
@@ -350,7 +350,7 @@ var Main = function () {
 						rgba.a = this.value;
 					}
 
-					var color = new Color('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
+					var color = new Color('rgb(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
 
 					var hsl = color.toString('hsl');
 
@@ -361,8 +361,9 @@ var Main = function () {
 						hsla.alpha = rgba.a;
 
 						console.log(hsla);
-					} else {
-						this.value = temp;
+						console.log(rgba);
+
+						box.update_change();
 					}
 				});
 
@@ -390,8 +391,6 @@ var Main = function () {
 						box.update_change();
 					}
 				});
-
-				setInterval(function () {}, 500);
 
 				// event_bind(rgbaInput[i], 'focus', function() {
 				// 	temp = this.value;
@@ -683,13 +682,20 @@ var Box = function () {
 
 	}, {
 		key: 'update_change',
-		value: function update_change(target) {
+		value: function update_change() {
 			var panel = s.qs('#js-panel'),
-			    movebar = s.qs('#js-movebar');
+			    movebar = s.qs('#js-movebar'),
+			    control = s.qs('#js-control'),
+			    solid_movebar = s.qs('#js-solid-movebar'),
+			    opacity_movebar = s.qs('#js-opacity-movebar'),
+			    watch = s.qs('#js-watch');
 
 			var offsetWidth = panel.offsetWidth,
 			    offsetHeight = panel.offsetHeight,
 			    movebarWidth = movebar.offsetWidth / 2;
+			controlWidth = control.offsetWidth, controlBarWidth = sodil_movebar.offsetWidth / 2;
+
+			//upadate movebar and background
 
 			var offsetX = offsetWidth * parseInt(hsla.saturation.split('%')[0]) / 100 - movebarWidth,
 			    offsetY = offsetHeight * (100 - parseInt(hsla.lightness.split('%')[0])) / 100 - movebarWidth;
@@ -698,6 +704,20 @@ var Box = function () {
 
 			movebar.style.left = offsetX + 'px';
 			movebar.style.top = offsetY + 'px';
+
+			//update control bar
+
+			var offsetX1 = controlWidth * parseInt(hsla.hue.split('%')[0]) / 360 - controlBarWidth;
+
+			solid_movebar.style.left = offsetX1 + 'px';
+
+			var offsetX2 = controlWidth * parseInt(hsla.alpha) - controlBarWidth;
+
+			opacity_movebar.style.left = offsetX2 + 'px';
+
+			//update watch 
+
+			watch.style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ',' + hsla.alpha + ')';
 		}
 	}]);
 

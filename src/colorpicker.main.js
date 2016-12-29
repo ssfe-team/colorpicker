@@ -278,9 +278,9 @@ class Main {
 		});
 
 		//Input Change
-		let temp = '';
+		// let temp = '';
 
-		event_bind(hexInput, 'change', function() {
+		event_bind(hexInput, 'input', function() {
 
 			let hex = this.value;
 
@@ -292,17 +292,17 @@ class Main {
 				hsla.hue = hsl.h;
 				hsla.saturation = hsl.s;
 				hsla.lightness = hsl.l;
-			} else {
-				this.value = temp;
-			}
+
+				box.update_change();
+			} 
 		});
 
-		event_bind(hexInput, 'focus', function() {
-			temp = this.value;
-		});
+		// event_bind(hexInput, 'focus', function() {
+		// 	temp = this.value;
+		// });
 
 		for (let i = 0; i < 4; ++i) {
-			event_bind(rgbaInput[i], 'change', function() {
+			event_bind(rgbaInput[i], 'input', function() {
 
 				if (i == 0) {
 					rgba.r = this.value;
@@ -314,7 +314,7 @@ class Main {
 					rgba.a = this.value;
 				}
 
-				let color = new Color('rgba(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
+				let color = new Color('rgb(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
 
 				let hsl = color.toString('hsl');
 
@@ -323,11 +323,12 @@ class Main {
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;
 					hsla.alpha = rgba.a;
-				
+
 					console.log(hsla);
-				} else {
-					this.value = temp;
-				}
+					console.log(rgba);
+
+					box.update_change();
+				} 
 			});
 
 			event_bind(hslaInput[i], 'input', function() {
@@ -354,10 +355,6 @@ class Main {
 					box.update_change();
 				}
 			});
-
-			setInterval(function () {
-
-			}, 500);
 
 			// event_bind(rgbaInput[i], 'focus', function() {
 			// 	temp = this.value;
@@ -657,20 +654,44 @@ class Box {
 	}
 
 	/* Change update */
-	update_change(target) {
+	update_change() {
 		const panel = s.qs('#js-panel'),
-			movebar = s.qs('#js-movebar');
+			movebar = s.qs('#js-movebar'),
+			control = s.qs('#js-control'),
+			solid_movebar = s.qs('#js-solid-movebar'),
+			opacity_movebar = s.qs('#js-opacity-movebar'),
+			watch = s.qs('#js-watch');
 
 		const offsetWidth = panel.offsetWidth,
-		      offsetHeight = panel.offsetHeight,
-		      movebarWidth = movebar.offsetWidth / 2;
+		     offsetHeight = panel.offsetHeight,
+		     movebarWidth = movebar.offsetWidth / 2;
+		     controlWidth = control.offsetWidth,
+		     controlBarWidth = sodil_movebar.offsetWidth / 2;
+
+
+		//upadate movebar and background
 
 		let offsetX = offsetWidth * parseInt(hsla.saturation.split('%')[0]) / 100 - movebarWidth,
 			offsetY = offsetHeight * (100 - parseInt(hsla.lightness.split('%')[0])) / 100 - movebarWidth;
 
-		panel.style.background = 'hsl(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ')'
+		panel.style.background = 'hsl(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ')';
 
 		movebar.style.left = offsetX + 'px';
 		movebar.style.top = offsetY + 'px';
+
+		//update control bar
+
+		let offsetX1 = controlWidth * parseInt(hsla.hue.split('%')[0]) / 360 - controlBarWidth;   
+
+		solid_movebar.style.left = offsetX1 + 'px'; 
+
+		let offsetX2 = controlWidth * parseInt(hsla.alpha) - controlBarWidth;
+
+		opacity_movebar.style.left = offsetX2 + 'px';
+
+		//update watch 
+
+		watch.style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ',' + hsla.alpha + ')';
+		
 	}
 }
