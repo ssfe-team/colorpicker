@@ -1,12 +1,6 @@
 // import {defaults} from './colorpicker.wheel.js';
 // import {screen} from './colorpicker.screen.js';
-
-/* Converts: HSL, RGB, HEX */
-const converts = {
-	hsl2rgb: (hsl) => {
-		
-	}
-};
+// import { SeeColors } from './SeeColors/seeColors.js';
 
 /* Setting */
 let setting = {
@@ -223,6 +217,8 @@ class Main {
 			  rgbaInput = s.qsAll('#js-input-rgba input'),
 			  hslaInput = s.qsAll('#js-input-hsla input');
 
+		const seeBtn = s.qs('#colorpicker-seeColors');
+
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
 		//Trigger box 
@@ -277,9 +273,7 @@ class Main {
 			cur++;
 		});
 
-		//Input Change
-		// let temp = '';
-
+		//Input Change bind
 		event_bind(hexInput, 'input', function() {
 
 			let hex = this.value;
@@ -363,6 +357,14 @@ class Main {
 			// event_bind(hslaInput[i], 'focus', function() {
 			// 	temp = this.value;
 			// });
+
+			//SeeColor bind
+			event_bind(seeBtn, 'click', function() {
+				new SeeColors('body').then(obj => {
+					console.log(obj);
+				});
+			});
+
 		}
 	}
 
@@ -402,7 +404,7 @@ class Box {
             </div>
             <div class="colorpicker-toolbar">
                 <div class="colorpicker-toolbar-tool">
-                    <div class="colorpicker-screen"></div>
+                    <div class="colorpicker-screen" id="colorpicker-seeColors"></div>
                     <div class="colorpicker-watch" id="js-watch"></div>
                     <div class="colorpicker-control" id="js-control">
                         <div class="colorpicker-control-solid">
@@ -679,6 +681,7 @@ class Box {
 		movebar.style.left = offsetX + 'px';
 		movebar.style.top = offsetY + 'px';
 
+
 		//update control bar
 
 		let offsetX1 = controlWidth * parseInt(hsla.hue) / 360 - controlBarWidth;   
@@ -688,6 +691,7 @@ class Box {
 		let offsetX2 = controlWidth * parseInt(hsla.alpha * 100) / 100 - controlBarWidth;
 
 		opacity_movebar.style.left = offsetX2 + 'px';
+
 
 		//update watch 
 
