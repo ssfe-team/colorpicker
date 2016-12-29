@@ -330,7 +330,7 @@ class Main {
 				}
 			});
 
-			event_bind(hslaInput[i], 'change', function() {
+			event_bind(hslaInput[i], 'input', function() {
 				
 				if (i == 0) {
 					hsla.hue = this.value;
@@ -350,20 +350,22 @@ class Main {
 					hsla.hue = hsl.h;
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;	
-				
-					console.log(hsla);
-				} else {
-					this.value = temp;
+					
+					box.update_change();
 				}
 			});
 
-			event_bind(rgbaInput[i], 'focus', function() {
-				temp = this.value;
-			});
+			setInterval(function () {
 
-			event_bind(hslaInput[i], 'focus', function() {
-				temp = this.value;
-			});
+			}, 500);
+
+			// event_bind(rgbaInput[i], 'focus', function() {
+			// 	temp = this.value;
+			// });
+
+			// event_bind(hslaInput[i], 'focus', function() {
+			// 	temp = this.value;
+			// });
 		}
 	}
 
@@ -655,18 +657,20 @@ class Box {
 	}
 
 	/* Change update */
-	change_update(type, target) {
+	update_change(target) {
+		const panel = s.qs('#js-panel'),
+			movebar = s.qs('#js-movebar');
 
-		let color = new Color(type);
+		const offsetWidth = panel.offsetWidth,
+		      offsetHeight = panel.offsetHeight,
+		      movebarWidth = movebar.offsetWidth / 2;
 
-		let hsl = color.toString('hsl');
+		let offsetX = offsetWidth * parseInt(hsla.saturation.split('%')[0]) / 100 - movebarWidth,
+			offsetY = offsetHeight * (100 - parseInt(hsla.lightness.split('%')[0])) / 100 - movebarWidth;
 
-		if (hsl) {
-			hsl.hue = hsl.h;
-			hsla.saturation = hsl.s;
-			hsla.lightness = hsl.l;
+		panel.style.background = 'hsl(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ')'
 
-			console.log(hsla);
-		}
+		movebar.style.left = offsetX + 'px';
+		movebar.style.top = offsetY + 'px';
 	}
 }

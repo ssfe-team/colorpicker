@@ -366,7 +366,7 @@ var Main = function () {
 					}
 				});
 
-				event_bind(hslaInput[_i3], 'change', function () {
+				event_bind(hslaInput[_i3], 'input', function () {
 
 					if (_i3 == 0) {
 						hsla.hue = this.value;
@@ -387,19 +387,19 @@ var Main = function () {
 						hsla.saturation = hsl.s;
 						hsla.lightness = hsl.l;
 
-						console.log(hsla);
-					} else {
-						this.value = temp;
+						box.update_change();
 					}
 				});
 
-				event_bind(rgbaInput[_i3], 'focus', function () {
-					temp = this.value;
-				});
+				setInterval(function () {}, 500);
 
-				event_bind(hslaInput[_i3], 'focus', function () {
-					temp = this.value;
-				});
+				// event_bind(rgbaInput[i], 'focus', function() {
+				// 	temp = this.value;
+				// });
+
+				// event_bind(hslaInput[i], 'focus', function() {
+				// 	temp = this.value;
+				// });
 			};
 
 			for (var _i3 = 0; _i3 < 4; ++_i3) {
@@ -682,20 +682,22 @@ var Box = function () {
 		/* Change update */
 
 	}, {
-		key: 'change_update',
-		value: function change_update(type, target) {
+		key: 'update_change',
+		value: function update_change(target) {
+			var panel = s.qs('#js-panel'),
+			    movebar = s.qs('#js-movebar');
 
-			var color = new Color(type);
+			var offsetWidth = panel.offsetWidth,
+			    offsetHeight = panel.offsetHeight,
+			    movebarWidth = movebar.offsetWidth / 2;
 
-			var hsl = color.toString('hsl');
+			var offsetX = offsetWidth * parseInt(hsla.saturation.split('%')[0]) / 100 - movebarWidth,
+			    offsetY = offsetHeight * (100 - parseInt(hsla.lightness.split('%')[0])) / 100 - movebarWidth;
 
-			if (hsl) {
-				hsl.hue = hsl.h;
-				hsla.saturation = hsl.s;
-				hsla.lightness = hsl.l;
+			panel.style.background = 'hsl(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ')';
 
-				console.log(hsla);
-			}
+			movebar.style.left = offsetX + 'px';
+			movebar.style.top = offsetY + 'px';
 		}
 	}]);
 
