@@ -90,8 +90,10 @@ class Color {
 		            let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
 		            let t1 = 2 * l - t2;
 		            let tempRGB = [1 / 3, 0, -1 / 3];
+
 		            for (let i = 0; i < 3; i++) {
 		                let t = h + tempRGB[i];
+		                
 		                if (t < 0) t += 1;
 		                if (t > 1) t -= 1;
 		                if (6 * t < 1) {
