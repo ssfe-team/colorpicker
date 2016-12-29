@@ -1,16 +1,12 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// import {defaults} from './colorpicker.wheel.js';
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // import {defaults} from './colorpicker.wheel.js';
 // import {screen} from './colorpicker.screen.js';
 
-/* Converts: HSL, RGB, HEX */
-var converts = {
-	hsl2rgb: function hsl2rgb(hsl) {}
-};
+
+var _seeColors = require('./SeeColors/seeColors.js');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* Setting */
 var setting = {
@@ -258,6 +254,8 @@ var Main = function () {
 			    rgbaInput = s.qsAll('#js-input-rgba input'),
 			    hslaInput = s.qsAll('#js-input-hsla input');
 
+			var seeBtn = s.qs('#colorpicker-seeColors');
+
 			var queue = [movebar, solid_movebar, opacity_movebar];
 
 			//Trigger box 
@@ -313,9 +311,7 @@ var Main = function () {
 				cur++;
 			});
 
-			//Input Change
-			// let temp = '';
-
+			//Input Change bind
 			event_bind(hexInput, 'input', function () {
 
 				var hex = this.value;
@@ -399,6 +395,13 @@ var Main = function () {
 				// event_bind(hslaInput[i], 'focus', function() {
 				// 	temp = this.value;
 				// });
+
+				//SeeColor bind
+				event_bind(seeBtn, 'click', function () {
+					new _seeColors.SeeColors('body').then(function (obj) {
+						console.log(obj);
+					});
+				});
 			};
 
 			for (var _i3 = 0; _i3 < 4; ++_i3) {
@@ -462,7 +465,7 @@ var Box = function () {
 	}, {
 		key: 'appendTpl',
 		value: function appendTpl() {
-			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen"></div>\n                    <div class="colorpicker-watch" id="js-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity" id="js-opacity-control">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">\n                        <input type="text" value="#fff">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0%">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="100%">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip" id="js-convert"></div>\n                </div>\n            </div>\n        ';
+			var templete = '\n            <div class="colorpicker-panel" id="js-panel">\n                <div class="colorpicker-panel-mask"></div>\n                <div class="colorpicker-panel-movebar" id="js-movebar"></div>\n            </div>\n            <div class="colorpicker-toolbar">\n                <div class="colorpicker-toolbar-tool">\n                    <div class="colorpicker-screen" id="colorpicker-seeColors"></div>\n                    <div class="colorpicker-watch" id="js-watch"></div>\n                    <div class="colorpicker-control" id="js-control">\n                        <div class="colorpicker-control-solid">\n                            <div class="colorpicker-control-movebar" id="js-solid-movebar"></div>\n                        </div>\n                        <div class="colorpicker-control-opacity" id="js-opacity-control">\n                            <div class="colorpicker-control-movebar" id="js-opacity-movebar"></div>\n                            <div class="colorpicker-control-opacity-mask"></div>\n                        </div>\n                    </div>\n                </div>\n                <div class="colorpicker-toolbar-input">\n                    <div class="colorpicker-toolbar-input-hex" id="js-input-hex" data-show="on">\n                        <input type="text" value="#fff">\n                        <div class="colorpicker-toolbar-input-text">HEX</div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-rgba" id="js-input-rgba" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">R</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">G</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="255">\n                            <div class="colorpicker-toolbar-input-text">B</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="colorpicker-toolbar-input-hsla" id="js-input-hsla" data-show="off">\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0">\n                            <div class="colorpicker-toolbar-input-text">H</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="0%">\n                            <div class="colorpicker-toolbar-input-text">S</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="100%">\n                            <div class="colorpicker-toolbar-input-text">L</div>\n                        </div>\n                        <div class="colorpicker-toolbar-input-wrap">\n                            <input type="text" value="1">\n                            <div class="colorpicker-toolbar-input-text">A</div>\n                        </div>\n                    </div>\n                    <div class="flip" id="js-convert"></div>\n                </div>\n            </div>\n        ';
 
 			var script = s.qs('script');
 
@@ -692,8 +695,9 @@ var Box = function () {
 
 			var offsetWidth = panel.offsetWidth,
 			    offsetHeight = panel.offsetHeight,
-			    movebarWidth = movebar.offsetWidth / 2;
-			controlWidth = control.offsetWidth, controlBarWidth = sodil_movebar.offsetWidth / 2;
+			    movebarWidth = movebar.offsetWidth / 2,
+			    controlWidth = control.offsetWidth,
+			    controlBarWidth = solid_movebar.offsetWidth / 2;
 
 			//upadate movebar and background
 
@@ -707,11 +711,11 @@ var Box = function () {
 
 			//update control bar
 
-			var offsetX1 = controlWidth * parseInt(hsla.hue.split('%')[0]) / 360 - controlBarWidth;
+			var offsetX1 = controlWidth * parseInt(hsla.hue) / 360 - controlBarWidth;
 
 			solid_movebar.style.left = offsetX1 + 'px';
 
-			var offsetX2 = controlWidth * parseInt(hsla.alpha) - controlBarWidth;
+			var offsetX2 = controlWidth * parseInt(hsla.alpha * 100) / 100 - controlBarWidth;
 
 			opacity_movebar.style.left = offsetX2 + 'px';
 

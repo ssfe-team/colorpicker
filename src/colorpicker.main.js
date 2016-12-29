@@ -1,12 +1,6 @@
 // import {defaults} from './colorpicker.wheel.js';
 // import {screen} from './colorpicker.screen.js';
-
-/* Converts: HSL, RGB, HEX */
-const converts = {
-	hsl2rgb: (hsl) => {
-		
-	}
-};
+// import { SeeColors } from './SeeColors/seeColors.js';
 
 /* Setting */
 let setting = {
@@ -96,8 +90,10 @@ class Color {
 		            let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
 		            let t1 = 2 * l - t2;
 		            let tempRGB = [1 / 3, 0, -1 / 3];
+
 		            for (let i = 0; i < 3; i++) {
 		                let t = h + tempRGB[i];
+		                
 		                if (t < 0) t += 1;
 		                if (t > 1) t -= 1;
 		                if (6 * t < 1) {
@@ -223,6 +219,8 @@ class Main {
 			  rgbaInput = s.qsAll('#js-input-rgba input'),
 			  hslaInput = s.qsAll('#js-input-hsla input');
 
+		const seeBtn = s.qs('#colorpicker-seeColors');
+
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
 		//Trigger box 
@@ -277,9 +275,7 @@ class Main {
 			cur++;
 		});
 
-		//Input Change
-		// let temp = '';
-
+		//Input Change bind
 		event_bind(hexInput, 'input', function() {
 
 			let hex = this.value;
@@ -363,6 +359,14 @@ class Main {
 			// event_bind(hslaInput[i], 'focus', function() {
 			// 	temp = this.value;
 			// });
+
+			//SeeColor bind
+			event_bind(seeBtn, 'click', function() {
+				new SeeColors('body').then(obj => {
+					console.log(obj);
+				});
+			});
+
 		}
 	}
 
@@ -402,7 +406,7 @@ class Box {
             </div>
             <div class="colorpicker-toolbar">
                 <div class="colorpicker-toolbar-tool">
-                    <div class="colorpicker-screen"></div>
+                    <div class="colorpicker-screen" id="colorpicker-seeColors"></div>
                     <div class="colorpicker-watch" id="js-watch"></div>
                     <div class="colorpicker-control" id="js-control">
                         <div class="colorpicker-control-solid">
@@ -664,9 +668,9 @@ class Box {
 
 		const offsetWidth = panel.offsetWidth,
 		     offsetHeight = panel.offsetHeight,
-		     movebarWidth = movebar.offsetWidth / 2;
+		     movebarWidth = movebar.offsetWidth / 2,
 		     controlWidth = control.offsetWidth,
-		     controlBarWidth = sodil_movebar.offsetWidth / 2;
+		     controlBarWidth = solid_movebar.offsetWidth / 2;
 
 
 		//upadate movebar and background
@@ -679,19 +683,21 @@ class Box {
 		movebar.style.left = offsetX + 'px';
 		movebar.style.top = offsetY + 'px';
 
+
 		//update control bar
 
-		let offsetX1 = controlWidth * parseInt(hsla.hue.split('%')[0]) / 360 - controlBarWidth;   
+		let offsetX1 = controlWidth * parseInt(hsla.hue) / 360 - controlBarWidth;   
 
 		solid_movebar.style.left = offsetX1 + 'px'; 
 
-		let offsetX2 = controlWidth * parseInt(hsla.alpha) - controlBarWidth;
+		let offsetX2 = controlWidth * parseInt(hsla.alpha * 100) / 100 - controlBarWidth;
 
 		opacity_movebar.style.left = offsetX2 + 'px';
+
 
 		//update watch 
 
 		watch.style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ',' + hsla.alpha + ')';
-		
+
 	}
 }
