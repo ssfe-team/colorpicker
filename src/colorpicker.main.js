@@ -1,6 +1,7 @@
-// import {defaults} from './colorpicker.wheel.js';
-// import {screen} from './colorpicker.screen.js';
-// import { SeeColors } from './SeeColors/seeColors.js';
+/*
+ * Colorpicker.main.js  Created by mnichangxin 2016/12/26
+ */
+
 
 /* Setting */
 let setting = {
@@ -84,7 +85,10 @@ class Color {
 		        l /= 100;
 
 		        if (s == 0) {
-		            let r = g = b = Math.ceil(l * 255);
+		          	let r = Math.ceil(l * 255),
+		          	    g = Math.ceil(l * 255),
+		          	    b = Math.ceil(l * 255);
+
 		            this.rgb = [r, g, b];
 		        } else {
 		            let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
@@ -93,7 +97,7 @@ class Color {
 
 		            for (let i = 0; i < 3; i++) {
 		                let t = h + tempRGB[i];
-		                
+
 		                if (t < 0) t += 1;
 		                if (t > 1) t -= 1;
 		                if (6 * t < 1) {
@@ -107,6 +111,7 @@ class Color {
 		                }
 		                tempRGB[i] = Math.ceil(t * 255);
 		            }
+		            
 		            this.rgb = tempRGB;
 		        }
 		    }

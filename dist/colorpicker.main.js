@@ -1,12 +1,12 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // import {defaults} from './colorpicker.wheel.js';
-// import {screen} from './colorpicker.screen.js';
-
-
-var _seeColors = require('./SeeColors/seeColors.js');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// import {defaults} from './colorpicker.wheel.js';
+// import {screen} from './colorpicker.screen.js';
+// import { SeeColors } from './SeeColors/seeColors.js';
 
 /* Setting */
 var setting = {
@@ -102,14 +102,20 @@ var Color = function () {
 				h /= 360, _s /= 100, l /= 100;
 
 				if (_s == 0) {
-					var r = g = b = Math.ceil(l * 255);
+					// let r = g = b = Math.ceil(l * 255);
+					var r = Math.ceil(l * 255),
+					    g = Math.ceil(l * 255),
+					    b = Math.ceil(l * 255);
+
 					this.rgb = [r, g, b];
 				} else {
 					var t2 = l >= 0.5 ? l + _s - l * _s : l * (1 + _s);
 					var t1 = 2 * l - t2;
 					var tempRGB = [1 / 3, 0, -1 / 3];
+
 					for (var _i2 = 0; _i2 < 3; _i2++) {
 						var t = h + tempRGB[_i2];
+
 						if (t < 0) t += 1;
 						if (t > 1) t -= 1;
 						if (6 * t < 1) {
@@ -158,10 +164,10 @@ var Color = function () {
 						    _s2 = void 0,
 						    l = void 0;
 						var r = this.rgb[0] / 255,
-						    _g = this.rgb[1] / 255,
-						    _b = this.rgb[2] / 255;
-						var max = Math.max(r, _g, _b);
-						var min = Math.min(r, _g, _b);
+						    g = this.rgb[1] / 255,
+						    b = this.rgb[2] / 255;
+						var max = Math.max(r, g, b);
+						var min = Math.min(r, g, b);
 						l = (max + min) / 2;
 						var diff = max - min;
 						_s2 = diff == 0 ? 0 : diff / (1 - Math.abs(2 * l - 1));
@@ -169,11 +175,11 @@ var Color = function () {
 						if (_s2 == 0) {
 							h = 0;
 						} else if (r == max) {
-							h = (_g - _b) / diff % 6;
-						} else if (_g == max) {
-							h = (_b - r) / diff + 2;
+							h = (g - b) / diff % 6;
+						} else if (g == max) {
+							h = (b - r) / diff + 2;
 						} else {
-							h = (r - _g) / diff + 4;
+							h = (r - g) / diff + 4;
 						}
 
 						h *= 60;
@@ -398,7 +404,7 @@ var Main = function () {
 
 				//SeeColor bind
 				event_bind(seeBtn, 'click', function () {
-					new _seeColors.SeeColors('body').then(function (obj) {
+					new SeeColors('body').then(function (obj) {
 						console.log(obj);
 					});
 				});
