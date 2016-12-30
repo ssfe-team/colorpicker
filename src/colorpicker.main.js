@@ -1,12 +1,6 @@
 // import {defaults} from './colorpicker.wheel.js';
 // import {screen} from './colorpicker.screen.js';
-
-/* Converts: HSL, RGB, HEX */
-const converts = {
-	hsl2rgb: (hsl) => {
-		
-	}
-};
+// import { SeeColors } from './SeeColors/seeColors.js';
 
 /* Setting */
 let setting = {
@@ -20,7 +14,13 @@ let hsla = {
 	saturation: '100%',
 	lightness: '50%',
 	alpha: '1'
-};
+},
+	rgba = {
+		r: '255',
+		g: '255',
+		b: '255',
+		a: '1'
+	};
 
 /* Selector */
 class Selector {
@@ -90,8 +90,10 @@ class Color {
 		            let t2 = l >= 0.5 ? l + s - l * s : l * (1 + s);
 		            let t1 = 2 * l - t2;
 		            let tempRGB = [1 / 3, 0, -1 / 3];
+
 		            for (let i = 0; i < 3; i++) {
 		                let t = h + tempRGB[i];
+		                
 		                if (t < 0) t += 1;
 		                if (t > 1) t -= 1;
 		                if (6 * t < 1) {
@@ -129,7 +131,6 @@ class Color {
 		                this.hex[i] = ch;
 		            }
 		        }
-		        // if (this.hex.length == 3) str = '#' + this.hex[0] + this.hex[1] + this.hex[2];
 		       	if (this.hex.length == 3) 
 		       		return '#' + this.hex[0] + this.hex[1] + this.hex[2]; 
 		        break;
@@ -161,7 +162,6 @@ class Color {
 		            this.hsl = [Math.round(h), (s * 100).toFixed(1), (l * 100).toFixed(1)];
 		        }
 		        if (this.hsl.length == 3) 
-		            // str = 'hsl(' + this.hsl[0] + '°, ' + this.hsl[1] + '%, ' + this.hsl[2] + '%)';
 		            return {
 		            	h: this.hsl[0],
 		            	s: this.hsl[1] + '%',
@@ -173,8 +173,7 @@ class Color {
 
 		    default:
 		        if (this.rgb.length == 3) {
-		            // str = 'rgb(' + this.rgb[0] + ', ' + this.rgb[1] + ', ' + this.rgb[2] + ')';
-		        	return {
+		        	return { 
 		        		r: this.rgb[0],
 		        		g: this.rgb[1],
 		        		b: this.rgb[2]
@@ -219,6 +218,8 @@ class Main {
 		const hexInput = s.qs('#js-input-hex input'),
 			  rgbaInput = s.qsAll('#js-input-rgba input'),
 			  hslaInput = s.qsAll('#js-input-hsla input');
+
+		const seeBtn = s.qs('#colorpicker-seeColors');
 
 		const queue = [movebar, solid_movebar, opacity_movebar];
 
@@ -274,8 +275,9 @@ class Main {
 			cur++;
 		});
 
-		//Input Change
-		event_bind(hexInput, 'change', function() {
+		//Input Change bind
+		event_bind(hexInput, 'input', function() {
+
 			let hex = this.value;
 
 			let color = new Color(hex);
@@ -286,14 +288,29 @@ class Main {
 				hsla.hue = hsl.h;
 				hsla.saturation = hsl.s;
 				hsla.lightness = hsl.l;
-			}
+
+				box.update_change();
+			} 
 		});
 
-		for (let i = 0; i < 4; ++i) {
-			event_bind(rgbaInput[i], 'change', function() {
-				let rgb = this.value;
+		// event_bind(hexInput, 'focus', function() {
+		// 	temp = this.value;
+		// });
 
-				let color = new Color(rgb);
+		for (let i = 0; i < 4; ++i) {
+			event_bind(rgbaInput[i], 'input', function() {
+
+				if (i == 0) {
+					rgba.r = this.value;
+				} else if (i == 1) {
+					rgba.g = this.value;
+				} else if (i == 2) {
+					rgba.b = this.value;
+				} else {
+					rgba.a = this.value;
+				}
+
+				let color = new Color('rgb(' + rgba.r + ', ' + rgba.g + ', ' + rgba.b + ')');
 
 				let hsl = color.toString('hsl');
 
@@ -301,22 +318,55 @@ class Main {
 					hsl.hue = hsl.h;
 					hsla.saturation = hsl.s;
 					hsla.lightness = hsl.l;
-				}
+					hsla.alpha = rgba.a;
+
+					console.log(hsla);
+					console.log(rgba);
+
+					box.update_change();
+				} 
 			});
 
-			event_bind(hslaInput[i], 'change', function() {
-				let hsl = this.value;
+			event_bind(hslaInput[i], 'input', function() {
+				
+				if (i == 0) {
+					hsla.hue = this.value;
+				} else if (i == 1) {
+					hsla.saturation = this.value;
+				} else if (i == 2) {
+					hsla.lightness = this.value;
+				} else {
+					hsla.alpha = this.value;
+				}
 
-				let color = new Color(hsl);
+				let color = new Color('hsl(' + hsla.hue + ',' + hsla.saturation + ', ' + hsla.lightness + ')');
 
-				hsl = color.toString('hsl');
+				let hsl = color.toString('hsl');
 
 				if (hsl) {
-					hsl.hue = hsl.h;
-					hsl.saturation = hsl.s;
-					hsl.lightness = hsl.l;
+					hsla.hue = hsl.h;
+					hsla.saturation = hsl.s;
+					hsla.lightness = hsl.l;	
+					
+					box.update_change();
 				}
 			});
+
+			// event_bind(rgbaInput[i], 'focus', function() {
+			// 	temp = this.value;
+			// });
+
+			// event_bind(hslaInput[i], 'focus', function() {
+			// 	temp = this.value;
+			// });
+
+			//SeeColor bind
+			event_bind(seeBtn, 'click', function() {
+				new SeeColors('body').then(obj => {
+					console.log(obj);
+				});
+			});
+
 		}
 	}
 
@@ -356,7 +406,7 @@ class Box {
             </div>
             <div class="colorpicker-toolbar">
                 <div class="colorpicker-toolbar-tool">
-                    <div class="colorpicker-screen"></div>
+                    <div class="colorpicker-screen" id="colorpicker-seeColors"></div>
                     <div class="colorpicker-watch" id="js-watch"></div>
                     <div class="colorpicker-control" id="js-control">
                         <div class="colorpicker-control-solid">
@@ -514,7 +564,7 @@ class Box {
 
 				let hue = Math.round((1 - (x + 8) / control.clientWidth) * 360);
 
-				hue == 360 ? hue = 0 : hue ;
+				hue == 360 ? hue = 0 : hue;
 
 				hsla.hue = hue;
 
@@ -583,10 +633,10 @@ class Box {
 		
 		input_hex.value = color.toString('hex');
 
-		input_rgba[0].value = color.toString('rgb').r;
-		input_rgba[1].value = color.toString('rgb').g;
-		input_rgba[2].value = color.toString('rgb').b;
-		input_rgba[3].value = para.alpha;
+		rgba.r = input_rgba[0].value = color.toString('rgb').r;
+		rgba.b = input_rgba[1].value = color.toString('rgb').g;
+		rgba.b = input_rgba[2].value = color.toString('rgb').b;
+		rgba.a = input_rgba[3].value = para.alpha;
 
 		input_hsla[0].value = para.hue;
 		input_hsla[1].value = para.saturation;
@@ -608,7 +658,46 @@ class Box {
 	}
 
 	/* Change update */
-	change_update(para) {
+	update_change() {
+		const panel = s.qs('#js-panel'),
+			movebar = s.qs('#js-movebar'),
+			control = s.qs('#js-control'),
+			solid_movebar = s.qs('#js-solid-movebar'),
+			opacity_movebar = s.qs('#js-opacity-movebar'),
+			watch = s.qs('#js-watch');
+
+		const offsetWidth = panel.offsetWidth,
+		     offsetHeight = panel.offsetHeight,
+		     movebarWidth = movebar.offsetWidth / 2,
+		     controlWidth = control.offsetWidth,
+		     controlBarWidth = solid_movebar.offsetWidth / 2;
+
+
+		//upadate movebar and background
+
+		let offsetX = offsetWidth * parseInt(hsla.saturation.split('%')[0]) / 100 - movebarWidth,
+			offsetY = offsetHeight * (100 - parseInt(hsla.lightness.split('%')[0])) / 100 - movebarWidth;
+
+		panel.style.background = 'hsl(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ')';
+
+		movebar.style.left = offsetX + 'px';
+		movebar.style.top = offsetY + 'px';
+
+
+		//update control bar
+
+		let offsetX1 = controlWidth * parseInt(hsla.hue) / 360 - controlBarWidth;   
+
+		solid_movebar.style.left = offsetX1 + 'px'; 
+
+		let offsetX2 = controlWidth * parseInt(hsla.alpha * 100) / 100 - controlBarWidth;
+
+		opacity_movebar.style.left = offsetX2 + 'px';
+
+
+		//update watch 
+
+		watch.style.background = 'hsla(' + hsla.hue + ', ' + hsla.saturation + ', ' + hsla.lightness + ',' + hsla.alpha + ')';
 
 	}
 }
