@@ -4,9 +4,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// import {defaults} from './colorpicker.wheel.js';
-// import {screen} from './colorpicker.screen.js';
-// import { SeeColors } from './SeeColors/seeColors.js';
+/*
+ * Colorpicker.main.js  Created by mnichangxin 2016/12/26
+ */
 
 /* Setting */
 var setting = {
@@ -102,7 +102,6 @@ var Color = function () {
 				h /= 360, _s /= 100, l /= 100;
 
 				if (_s == 0) {
-					// let r = g = b = Math.ceil(l * 255);
 					var r = Math.ceil(l * 255),
 					    g = Math.ceil(l * 255),
 					    b = Math.ceil(l * 255);
@@ -129,6 +128,7 @@ var Color = function () {
 						}
 						tempRGB[_i2] = Math.ceil(t * 255);
 					}
+
 					this.rgb = tempRGB;
 				}
 			}
