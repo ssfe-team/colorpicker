@@ -132,7 +132,7 @@
 	text-align: center;
 }
 .colorpicker-toolbar-input-hex {
-	/*display: none;*/
+	display: block;
 }
 .colorpicker-toolbar-input-rgba {
 	display: none;

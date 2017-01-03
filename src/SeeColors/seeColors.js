@@ -13,9 +13,12 @@
  *   new SeeColors("#item").then(it=>{...});  "..."为取完颜色后的操作，it为渠道的像素颜色
  */
 "use strict";
-class SeeColors{
+
+class SeeColors {
+
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
-    constructor(obj,option){
+
+    constructor(obj,option) {
         this.dom=(obj.nodeType==1)?obj:this.$(obj);
         this.option=option || {auto:"auto"};
         return new Promise((resolve,reject)=>{
@@ -25,6 +28,7 @@ class SeeColors{
             });
         });
     }
+
     //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
     controller(){
         if(this.option.auto=="auto"){
