@@ -1,8 +1,3 @@
-/*
- * Colorpicker.main.js  Created by mnichangxin 2016/12/26
- */
-
-
 /* Setting */
 let setting = {
 	posX: '',
