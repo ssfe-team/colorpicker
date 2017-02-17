@@ -1,4 +1,4 @@
-import { SeeColors } from './SeeColors/seeColors.js';
+// import { SeeColors } from './SeeColors/seeColors.js';
 
 /* Setting */
 let setting = {
