@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 
 //compile and package
 gulp.task('compile', function() {
-	gulp.src('src/colorpicker.main.js')
+	gulp.src('src/SeeColors/seeColors(useCanvg).js')
 		.pipe(babel({
 			presets: ['es2015']
 		}))
