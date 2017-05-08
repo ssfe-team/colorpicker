@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+  <link rel="stylesheet" href="./ss-colorpicker.css">
+  <script src="require.js"></script>
+  <script src="rgbcolor.js"></script>
+  <script src="StackBlur.js"></script>
+  <script src="canvg.js"></script>
+  <script src="seeColors.js"></script>
+  <script src="colorpicker.js"></script>
+</head>
+<body>
+<textarea name="" id="aaa" cols="30" rows="10">
+</textarea>
+<button id="aab">取色</button>
+<div class="add"></div>
+<script>
+
+  require(['colorPicker'], colorPicker=>{
+    let cp=new colorPicker(document.querySelector('.add'));
+    document.querySelector('#aab').addEventListener('click',e=>{
+//      new seeColors(document.querySelector('#aaa').value).then(e=>{
+//        console.log(e);
+//        document.querySelector('#a1').value=e.colorString;
+//      })
+      cp.updateSVG(document.querySelector('#aaa').value);
+    })
+    window.cp=colorPicker;
+  })
+  //  document.querySelector('#aab').addEventListener('click',e=>{
+  //    let img=new Image;
+  //    img.src=document.querySelector('#aaa').value;
+  //    img.onload=e=>{
+  //      document.querySelector('.add').appendChild(img);
+  //    }
+  //  })
+
+
+</script>
+<input type="text" id="a1">
+</body>
+</html>
