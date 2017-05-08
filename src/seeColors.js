@@ -23,7 +23,7 @@
   class SeeColors {
     //构造器，需要传入元素或一个css样子的选择器，一个option（可选）
 
-    constructor(obj, option) {
+    constructor(obj,option,fc) {
       if (!obj) return;
       let temp = obj.split('NaNpx');
       this.svg = temp.join();
@@ -31,17 +31,18 @@
       this.svg = temp.join(' ');
       temp = this.svg.split('href="//');
       this.svg = temp.join('href="http://');
+      this.fc=fc;
 
       this.dom = document.createElement('div')
       this.dom.innerHTML = this.svg;
 
       let width, height
       if (this.dom.querySelector('svg').getAttribute('width')) {
-        width = this.dom.querySelector('svg').getAttribute('width').split('px')[0],
-          height = this.dom.querySelector('svg').getAttribute('height').split('px')[0];
+        width = this.dom.querySelector('svg').getAttribute('width').split('px')[0]
+        height = this.dom.querySelector('svg').getAttribute('height').split('px')[0]
       } else {
-        width = this.dom.querySelector('svg').getAttribute.viewBox.split(' ')[2];
-        height = this.dom.querySelector('svg').getAttribute.viewBox.split(' ')[3];
+        width = this.dom.querySelector('svg').getAttribute('viewBox').split(' ')[2]
+        height = this.dom.querySelector('svg').getAttribute('viewBox').split(' ')[3]
       }
 
 
@@ -78,36 +79,28 @@
     controller() {
 
       return this.createImage().then(function (can) {
-
         this.createSeeColorContainer(can.canvas);
-
         let canvas = can.canvas,
           width = canvas.width,
           height = canvas.height;
 
         return this.addListener(this.$('.seeColors-temp-container'), (x, y) => {
-
           if (this.$('.seeColors-follow-cooky') == null) {
             this.createFollowCookies();
           }
-
           let top = canvas.offsetTop,
             left = canvas.offsetLeft,
             mX = x - left,
             mY = y - top,
             pixel = mY * width + mX;
-
           this.setFollowCookies(x, y + this.$("body").scrollTop, can, pixel, width, height);
-
-          // console.log(mX+","+mY+
-          //   ",rgba("+
-          //   can.imgData[(pixel-1)*4]+","+
-          //   can.imgData[(pixel-1)*4+1]+","+
-          //   can.imgData[(pixel-1)*4+2]+","+
-          //   can.imgData[(pixel-1)*4+3]/255+")");
-
+          this.fc&&this.fc({
+            r:can.imgData[(pixel - 1) * 4],
+            g:can.imgData[(pixel - 1) * 4 + 1],
+            b:can.imgData[(pixel - 1) * 4 + 2],
+            a:can.imgData[(pixel - 1) * 4 + 3] / 255
+          })
         }, (x, y) => {
-
           let top = canvas.offsetTop - this.$("body").scrollTop,
             left = canvas.offsetLeft - this.$("body").scrollLeft,
             mX = x - left,
@@ -122,10 +115,12 @@
             can.imgData[(pixel - 1) * 4 + 1] + "," +
             can.imgData[(pixel - 1) * 4 + 2] + "," +
             can.imgData[(pixel - 1) * 4 + 3] / 255 + ")",
-            color: [can.imgData[(pixel - 1) * 4],
-              can.imgData[(pixel - 1) * 4 + 1],
-              can.imgData[(pixel - 1) * 4 + 2],
-              can.imgData[(pixel - 1) * 4 + 3] / 255]
+            rgbaColor: {
+              r:can.imgData[(pixel - 1) * 4],
+              g:can.imgData[(pixel - 1) * 4 + 1],
+              b:can.imgData[(pixel - 1) * 4 + 2],
+              a:can.imgData[(pixel - 1) * 4 + 3] / 255
+            }
           }
 
         }).then((it) => {
@@ -133,14 +128,10 @@
         });
 
       }.bind(this)).then((it) => {
-
         return it;
-
       }).catch((e) => {
-
         console.log(e + "渲染失败!");
         return null;
-
       });
     }
 
@@ -168,11 +159,10 @@
 
     //为container添加响应，fn为mousemove的响应，fin为click的响应
     addListener(container, fn, fin) {
-      container.addEventListener("mousemove", (e) => {
 
+      container.addEventListener("mousemove", (e) => {
         let mouseLocation = this.getMouseLocation(e);
         fn(mouseLocation.mouseX, mouseLocation.mouseY);
-
       }, false);
 
       // container.addEventListener("mouseover",()=>{
@@ -186,10 +176,8 @@
       return new Promise((resolve, reject) => {
 
         container.addEventListener("click", (e) => {
-
           let mouseLocation = this.getMouseLocation(e);
           resolve(fin(mouseLocation.mouseX, mouseLocation.mouseY));
-
         }, false);
 
       });
@@ -218,6 +206,7 @@
 
     //创建一个div标签，这个标签覆盖整个body体并为白色半透明，并为canvas设置位置。效果为：截屏时，this.dom以外的其他元素有模糊效果
     createSeeColorContainer(canvas) {
+
       let container = document.createElement("div");
       container.classList.add('seeColors-temp-container');
       container.style.width = '100%'

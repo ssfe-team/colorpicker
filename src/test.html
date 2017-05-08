@@ -10,35 +10,19 @@
   <script src="canvg.js"></script>
   <script src="seeColors.js"></script>
   <script src="colorpicker.js"></script>
+  <script src="test.js"></script>
 </head>
 <body>
-<textarea name="" id="aaa" cols="30" rows="10">
-</textarea>
-<button id="aab">取色</button>
-<div class="add"></div>
+<button id="aab">测试用svg（要测试取色功能请先点这个按钮）</button>
 <script>
 
   require(['colorPicker'], colorPicker=>{
     let cp=new colorPicker(document.querySelector('.add'));
     document.querySelector('#aab').addEventListener('click',e=>{
-//      new seeColors(document.querySelector('#aaa').value).then(e=>{
-//        console.log(e);
-//        document.querySelector('#a1').value=e.colorString;
-//      })
-      cp.updateSVG(document.querySelector('#aaa').value);
+      cp.updateSVG(testSvg());
     })
-    window.cp=colorPicker;
   })
-  //  document.querySelector('#aab').addEventListener('click',e=>{
-  //    let img=new Image;
-  //    img.src=document.querySelector('#aaa').value;
-  //    img.onload=e=>{
-  //      document.querySelector('.add').appendChild(img);
-  //    }
-  //  })
-
 
 </script>
-<input type="text" id="a1">
 </body>
 </html>
