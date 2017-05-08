@@ -1,4 +1,5 @@
 # colorpicker
+
 全新打造的colorPicker
 
 * 依赖:
@@ -7,3 +8,4 @@
 * 样式及: icon colors.png | pick.png | tr.png | ss-colorpicker.less
 
 * 测试用: require.js test.html test.js
+
