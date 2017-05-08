@@ -12,12 +12,12 @@
 
 	// export as AMD...
 	if ( typeof define !== 'undefined' && define.amd ) {
-		define('canvgModule', [ 'rgbcolor', 'stackblur' ], factory );
+		define('canvg', [ 'src/rgbcolor', 'src/StackBlur' ], factory );
 	}
 
 	// ...or as browserify
 	else if ( typeof module !== 'undefined' && module.exports ) {
-		module.exports = factory( require( 'rgbcolor' ), require( 'stackblur' ) );
+		module.exports = factory( require( 'src/rgbcolor' ), require( 'src/StackBlur' ) );
 	}
 
 	global.canvg = factory( global.RGBColor, global.stackBlur );

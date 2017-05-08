@@ -1,5 +1,5 @@
 {
-  "name": "colorpicker",
+  "name": "ss_colorpicker",
   "version": "1.0.0",
   "description": "The colorpicker used to webpage.",
   "main": "colorpicker.js",
@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ssfe-team/colorpicker.git"
+    "url": "git+https://github.com/ssfe-team/colorpicker.git"
   },
   "keywords": [
     "colorpicker"
   ],
   "author": "ssfe",
-  "license": "ISC",
+  "license": "SEE LICENSE IN README.md",
   "bugs": {
     "url": "https://github.com/ssfe-team/colorpicker/issues"
   },
@@ -26,5 +26,6 @@
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0"
-  }
+  },
+  "dependencies": {}
 }
