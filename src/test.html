@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test</title>
+  <link rel="stylesheet" href="./ss-colorpicker.css">
+  <script src="require.js"></script>
+  <script src="rgbcolor.js"></script>
+  <script src="StackBlur.js"></script>
+  <script src="canvg.js"></script>
+  <script src="seeColors.js"></script>
+  <script src="colorpicker.js"></script>
+  <script src="test.js"></script>
+</head>
+<body>
+<button id="aab">测试用svg（要测试取色功能请先点这个按钮）</button>
+<script>
+
+  require(['colorPicker'], colorPicker=>{
+    let cp=new colorPicker(document.querySelector('.add'));
+    document.querySelector('#aab').addEventListener('click',e=>{
+      cp.updateSVG(testSvg());
+    })
+  })
+
+</script>
+</body>
+</html>

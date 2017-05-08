@@ -1,7 +1,11 @@
 # colorpicker
 
-原生JS拾色器
+全新打造的colorPicker
 
-* 对当前网页进行取色
+* 依赖:
+  colorpicker > seeColors > canvg > ( rgbcolor | StackBlur )
+  
+* 样式及: icon colors.png | pick.png | tr.png | ss-colorpicker.less
 
-* Hsla, Rgba, 十六进制颜色值的转换 
+* 测试用: require.js test.html test.js
+
