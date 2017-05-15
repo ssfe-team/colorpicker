@@ -148,13 +148,14 @@
   })()
 
   class ColorPicker{
-    constructor(){
+    constructor(color){
       let tpl=this.build(),
         node=document.body
       node.appendChild(tpl)
       this._d_=node.querySelector('.ss-function-colorPicker')
       this._ob_()
       this.event()
+	    if(color){this.curHsb=_ct.HexToHSB(color)}
     }
 
     getColor(fn){
