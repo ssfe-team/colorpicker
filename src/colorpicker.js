@@ -157,6 +157,10 @@
       this.event()
     }
 
+    getColor(fn){
+      this.fn=fn
+    }
+
     build(){
       let t=document.createElement('div')
       t.innerHTML=_tpl
@@ -181,6 +185,7 @@
       this.computeWheelPos()
       this.setSliderBgColor()
       this._d_.querySelector('.ss-function-colorPicker-colors .color-input').value='#'+_ct.HSBToHex(this.curHsb);
+      this.fn&&this.fn(_ct.HSBToHex(this.curHsb));
     }
 
     event(){
