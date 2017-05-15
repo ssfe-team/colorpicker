@@ -18,10 +18,15 @@
 
   require(['colorPicker'], colorPicker=>{
     let cp=new colorPicker(document.querySelector('.add'));
+	  cp.getColor(fn);
     document.querySelector('#aab').addEventListener('click',e=>{
       cp.updateSVG(testSvg());
-    })
+    });
+
   })
+  function fn(color) {
+    console.log(color);
+  }
 
 </script>
 </body>
