@@ -162,6 +162,10 @@
       this.fn=fn
     }
 
+    setColor(color){
+      this.curHsb=_ct.HexToHSB(color);
+    }
+
     build(){
       let t=document.createElement('div')
       t.innerHTML=_tpl
