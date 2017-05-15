@@ -17,7 +17,7 @@
 <script>
 
   require(['colorPicker'], colorPicker=>{
-    let cp=new colorPicker(document.querySelector('.add'));
+    let cp=new colorPicker('00ffcc');
 	  cp.getColor(fn);
     document.querySelector('#aab').addEventListener('click',e=>{
       cp.updateSVG(testSvg());
