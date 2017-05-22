@@ -45,6 +45,8 @@
         height = this.dom.querySelector('svg').getAttribute('viewBox').split(' ')[3]
       }
 
+      width=Number.parseInt(width)
+      height=Number.parseInt(height)
 
       this.scroller = this.$("body").scrollTop;
       this.option = option || {
