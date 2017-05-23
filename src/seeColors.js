@@ -73,14 +73,24 @@
       // })
     }
 
-    run() {
-
+    waiting() {
+			let w=document.createElement('div')
+	    let img=new Image
+	    w.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.24);z-index:9999'
+	    img.src='./onloadMaterial.gif'
+	    img.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)'
+	    w.appendChild(img)
+	    return w
     }
 
     //控制函数，链接渲染、生成图片和创建响应的函数。返回一个被选中的像素点颜色
     controller() {
+			let onload=this.waiting()
+	    document.body.appendChild(onload)
 
       return this.createImage().then(function (can) {
+	      onload.remove()
+
         this.createSeeColorContainer(can.canvas);
         let canvas = can.canvas,
           width = canvas.width,
@@ -188,6 +198,7 @@
 
     //根据传入的节点生成图片，返回一个Promise为当图片成功加载后的响应
     createImage() {
+
 
       return new Promise((resolve, reject) => {
         let c = document.createElement('canvas');
