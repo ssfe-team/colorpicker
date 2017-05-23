@@ -199,11 +199,10 @@
     //根据传入的节点生成图片，返回一个Promise为当图片成功加载后的响应
     createImage() {
 
-
       return new Promise((resolve, reject) => {
         let c = document.createElement('canvas');
         canvg(c, this.svg, {
-          log: true, ignoreMouse: true, renderCallback: e => {
+          log: true, ignoreMouse: true, useCORS: true, renderCallback: e => {
             let ctx = c.getContext('2d');
             let imgData = ctx.getImageData(0, 0, this.option.width, this.option.height).data;
             console.log(imgData)
@@ -225,14 +224,16 @@
       container.style.width = '100%'
       container.style.height = '100%'
       container.style.position = "fixed";
-      container.style.zIndex = "999";
+      container.style.zIndex = "15000";
       container.style.top = "0";
       container.style.left = "0";
+      container.style.boxSizing = "content-box";
       container.style.backgroundColor = "rgba(0,0,0,.6)";
       container.appendChild(canvas);
       canvas.style.position = "absolute";
       canvas.classList.add('seeColors-temp-canvas');
       canvas.style.zIndex = "1000";
+      canvas.style.boxSizing = "content-box";
       this.$("body").appendChild(container);
       console.log((container.offsetHeight - this.option.height) / 2)
       canvas.style.left = (container.offsetWidth - this.option.width) / 2 + 'px';
@@ -252,6 +253,7 @@
         cooky.style.height = "122px";
         cooky.style.borderRadius = "61px";
         cooky.style.overflow = "hidden";
+        cooky.style.boxSizing = "content-box";
 
         for (let i = 0; i < 121; i++) {
 
@@ -261,6 +263,7 @@
           cc.style.borderLeft = "1px #ccc solid";
           cc.style.borderTop = "1px #ccc solid";
           cc.style.float = "left";
+          cc.style.boxSizing = "content-box";
           cooky.appendChild(cc);
 
         }
@@ -273,9 +276,11 @@
         this.$('.seeColors-follow-cooky > div:nth-child(72)').style.borderTop = "1px red solid";
         this.$('.seeColors-follow-cooky').style.transition = "all 0 linear";
         this.$('.seeColors-follow-cooky > div').style.transition = "all 0.1s linear";
+        this.$('.seeColors-follow-cooky > div').style.boxSizing = "content-box";
 
       } else {
         this.$('.seeColors-follow-cooky').style.display = "block";
+        this.$('.seeColors-follow-cooky > div').style.boxSizing = "content-box";
 
       }
     }
