@@ -34,8 +34,8 @@
         <input type="text" class="color-input">
       </div>
       <div class="ss-function-colorPicker-confirm">
-        <span>取消</span>
-        <span>确定</span>
+        <span class="cancel">取消</span>
+        <span class="confirm">确定</span>
       </div>
     </div>`;
   const _ct=(()=>{
